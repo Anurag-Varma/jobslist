@@ -12,7 +12,7 @@ dotenv.config();
 connectDB();
 
 const corsOptions = {
-    origin: 'http://localhost:3000', // Replace with your frontend origin
+    origin: true, // Replace with your frontend origin
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
     credentials: true
 };
