@@ -82,7 +82,8 @@ export default function SignUpCard() {
         setLoading(true);
 
         try {
-            const res = await fetch('/api/users/signup', {
+            const apiUrl = process.env.BACKEND_API_URL;
+            const res = await fetch(`${apiUrl}/api/users/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

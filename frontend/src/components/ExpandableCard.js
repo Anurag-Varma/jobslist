@@ -3,7 +3,6 @@ import { Button, Card, Container, Row, Col, Form, Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import './ExpandableCard.css'; // Ensure this CSS file is in the same directory
-import { XCircle } from 'react-bootstrap-icons'; // Import XCircle icon
 
 const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
 

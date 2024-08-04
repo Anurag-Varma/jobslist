@@ -20,13 +20,13 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
 
     const [updateSource, setUpdateSource] = useState("");
 
-
+    const apiUrl = process.env.BACKEND_API_URL;
 
     const searchJobs = async (data) => {
         try {
             setUpdateSource("fetching");
             setFetchingJobsLoading(true);
-            const response = await axios.post('/api/jobs/', data,
+            const response = await axios.post(`${apiUrl}/api/jobs/`, data,
                 {
                     withCredentials: true
                 }
@@ -35,7 +35,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
             setItems(jobs);
 
             if (jobs.length > 0) {
-                const firstJobResponse = await axios.get(`/api/jobs/${jobs[0]._id}`, {
+                const firstJobResponse = await axios.get(`${apiUrl}/api/jobs/${jobs[0]._id}`, {
                     withCredentials: true
                 });
                 handleSetDefaultJob(firstJobResponse.data.job);
@@ -75,7 +75,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
         if (updateSource === "done") {
             miniJobViewed(miniJobclickedIndex);
             setUpdateSource("");
-            if (items.length === 0) {
+            if (items && items.length === 0) {
                 setTotalJobCount(false);
             }
             else {
@@ -90,7 +90,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
         const updateJobDetails = async () => {
             if (defaultJob && defaultJob.applied) {
                 try {
-                    await axios.put('/api/users/updateJobDetails', {
+                    await axios.put(`${apiUrl}/api/users/updateJobDetails`, {
                         "jobApplied": defaultJob._id
                     }, {
                         withCredentials: true
@@ -116,7 +116,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
 
     const miniJobViewed = async (index) => {
         try {
-            await axios.put('/api/users/updateJobDetails', {
+            await axios.put(`${apiUrl}/api/users/updateJobDetails`, {
                 "jobViewed": index
             }, {
                 withCredentials: true
@@ -136,7 +136,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
 
     const handleMiniJobClick = async (index) => {
         try {
-            await axios.get(`/api/jobs/${index}`, {
+            await axios.get(`${apiUrl}/api/jobs/${index}`, {
                 withCredentials: true
             })
                 .then(response => {
@@ -157,10 +157,18 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
     const itemsPerPage = 10; // Number of items per page
 
     // Calculate the total number of pages
-    const totalPages = Math.ceil(items.length / itemsPerPage);
+    var totalPages = 0;
+
+    if (items) {
+        totalPages = Math.ceil(items.length / itemsPerPage);
+    }
 
     // Get the items for the current page
-    const currentItems = items.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    var currentItems = []
+
+    if (items) {
+        currentItems = items.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    }
 
     const miniJobContainerRef = useRef(null);
 
@@ -185,7 +193,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
     const handleRemoveMiniJob = async (index) => {
 
         try {
-            await axios.put('/api/users/updateJobDetails', {
+            await axios.put(`${apiUrl}/api/users/updateJobDetails`, {
                 "jobDeleted": index
             }, {
                 withCredentials: true

@@ -52,7 +52,8 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
 
     const handleDelete = async () => {
         try {
-            await axios.post('/api/jobs/deleteJob/', {
+            const apiUrl = process.env.BACKEND_API_URL;
+            await axios.post(`${apiUrl}/api/jobs/deleteJob/`, {
                 "jobId": job._id
             }, {
                 withCredentials: true
