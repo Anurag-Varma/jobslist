@@ -1,0 +1,179 @@
+.expandable-card {
+    position: fixed;
+    top: 15%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .expandable-card-button {
+    margin-bottom: 10px;
+    background-color: white;
+    font-size: 16px;
+    font-weight: bold;
+    /* padding-bottom: 7px; */
+  }
+  
+  .expandable-slide-card {
+    position: absolute;
+    top: -20px;
+    right: -500px; /* Ensure this matches the card width */
+    width: 500px;
+    height: 88vh; /* Make the card height cover the viewport height */
+    max-height: 88vh;
+    transition: right 0.3s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    padding: 0;
+  }
+
+  .expandable-slide-card.expanded {
+    right: 0;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .expandable-card .card-title {
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    width: 480px;
+    background-color: #fff; /* Match the background color of the card */
+    z-index: 10;
+    padding: 15px; /* Adjust as necessary */
+    border-bottom: 1px solid #ddd;
+  }
+
+  .expandable-card .card-body {
+    box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.5);    
+    border-right: none;
+    height: 100%;
+    overflow-y: scroll;
+  }
+  
+  .expandable-card .close-icon {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    font-size: 1.5rem;
+    z-index:11;
+    cursor: pointer;
+    color: #000; /* You can change the color to fit your design */
+  }
+  
+  .expandable-card .card-footer{
+    position: absolute;
+    bottom: 0px;
+    left: 1px;
+    width: 480px;
+    background-color: #fff; /* Match the background color of the card */
+    z-index: 10;
+    padding: 15px; /* Adjust as necessary */
+    border-bottom: 1px solid #ddd;
+  }
+
+
+  .expandable-card-container  .form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: #000 1px solid;
+  }
+
+  .expandable-card-container .form-check-input:focus{
+    box-shadow: none !important;  
+    outline: none !important;
+    border: #000 1px solid;
+}
+
+.expandable-card-container .form-check-input:hover{
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 1);
+    background-color: #F3F3F3;
+    border: #000 1px solid;
+
+  }
+
+  .expandable-card-container .form-check-input:checked{
+    background-color: green;
+    border: #000 1px solid;
+  }
+
+  .expandable-card-container .form-check-input:checked:hover{
+    background-color: #004c33;
+    border: #000 1px solid;
+  }
+
+  .expandable-card-container  .form-check-label {
+    font-size: 13px;
+    color: gray;
+  }
+
+  .expandable-card-footer{
+    display: flex;
+    justify-content: end;
+}
+
+.show-results{
+    border-radius: 20px;
+    height: 30px;
+    padding-top: 2px;  
+    background-color: #0a66c2;
+    margin-left: 10px;
+}
+
+.show-results:hover{
+    background-color: #004182;
+}
+
+.reset{
+    height: 30px;
+    padding-top: 2px;  
+}
+
+.reset:hover{
+    background-color: rgba(128, 128, 128, 0.127);
+}
+
+.expandable-keywords input {
+  border: hsl(0, 0%, 0%) 1px solid;
+  width: 400px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 14PX;
+  padding-left: 10px;
+}
+
+.expandable-keywords input:hover{
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1);
+  background-color: #F3F3F3;
+}
+
+.expandable-keywords-div{
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.expandable-keywords-badge{
+  margin-right: 5px;
+  font-size: 14px;
+  background-color: rgba(128, 128, 128, 0.241) !important;
+  color: #000;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.expandable-keywords-close{
+  margin-left: 14px;
+  cursor: pointer;
+  margin-top: 0px;
+  font-size: 13px;
+}
+
+.easy-apply-div .form-check-input, 
+.applied-jobs-div .form-check-input, 
+.viewed-jobs-div .form-check-input{
+  width: 35px;
+}

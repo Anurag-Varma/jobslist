@@ -1,0 +1,63 @@
+.job-info-container{
+    background-color: white !important;
+    width: 1800px;
+    height: 92.5vh;
+    overflow-y: scroll;
+    scrollbar-color: #f3f1ed white;
+    scrollbar-width: thin;
+    padding: 20px;
+}
+
+.job-info-container .custom-badge-emp-type{
+    background-color: #daebd1 !important;
+    color: black;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.job-info-container .custom-badge-exp-lvl{
+    background-color: #daebd1 !important;
+    color: black;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.job-info-container .company-industry{
+    font-size: 13px;
+    font-weight: 500;
+    color: gray;
+}
+
+
+.job-info-container .job-info-direct-apply-button{
+    border-radius: 20px;
+    width: 140px;
+    background-color: #0a66c2;
+    margin-left: 5px;
+    margin-right: 20px !important;
+    padding: 5px;
+    height: 40px;
+}
+
+.job-info-container .job-info-direct-apply-button:hover{
+    background-color: #004182;
+}
+
+.job-info-container .job-info-linkedin-apply-button{
+    border-radius: 20px;
+    width: 180px;
+    background-color: white;
+    margin-left: 5px;
+    margin-right: 20px !important;
+    padding: 5px;
+    height: 40px;
+}
+
+.job-info-container .job-info-linkedin-apply-button:hover{
+    color: #0a66c2;
+    border-color: #0a66c2;
+}
+
+.job-info-container .job-description{
+    font-size: 13px;
+}

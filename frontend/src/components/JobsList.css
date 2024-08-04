@@ -1,0 +1,53 @@
+.jobs-list-container .job-list-seperator {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    background-color: white;
+    height: 10px;
+}
+
+
+.jobs-list-container{
+    height: 92.5vh;
+    overflow-y: scroll;
+}
+
+
+.jobs-list-container .pagination {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    background-color: white;
+    padding: 20px;
+}
+
+.jobs-list-container .pagination button {
+    margin: 0 5px;
+    height: 30px;
+    width: 30px;
+    border: none;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 50%;
+}
+
+.jobs-list-container .previous-button,
+.jobs-list-container .next-button{
+    width: 60px !important;
+    border-radius: 20px !important;
+}
+
+.jobs-list-container .pagination button.active {
+    background-color: black;
+    color: white;
+    
+}
+
+.jobs-list-container .pagination button:hover:not(.active) {
+    background-color: rgba(183, 183, 183, 0.385);
+}
+
+.jobs-list-container .pagination button:focus {
+    outline: none;
+}

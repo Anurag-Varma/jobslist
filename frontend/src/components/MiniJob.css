@@ -1,0 +1,120 @@
+.mini-job-container{
+    background-color: white;
+    cursor: pointer;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-left: 3px solid transparent;
+    border-bottom: rgba(128, 128, 128, 0.299) 1px solid;
+}
+
+.mini-job-container-deleted{
+    background-color: white;
+    cursor: pointer;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    border-left: 3px solid transparent;
+    border-bottom: rgba(128, 128, 128, 0.299) 1px solid;
+}
+
+.mini-job-container-deleted .job-title,
+.mini-job-container-deleted .company-name{
+    color: rgba(128, 128, 128, 0.3) !important;
+}
+
+.mini-job-container-deleted.clicked{
+    background-color: #edf3f8;
+    border-left: 3px solid #0a66c2;
+}
+
+
+.mini-job-container.clicked{
+    background-color: #edf3f8;
+    border-left: 3px solid #0a66c2;
+}
+
+.mini-job-container .job-title{
+    color: #0a66c2;
+    margin-bottom: 0;
+}
+
+.mini-job-container  .company-logo-col{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+}
+
+.mini-job-container .company-col{
+    padding: 0;
+}
+
+.mini-job-container .company-name{
+    font-size: 14px;
+}
+
+
+.mini-job-container .company-info{
+    font-size: 14px;
+    color: gray;
+}
+
+
+.mini-job-container .extra-info{
+    font-size: 12px;
+    color: gray;
+    margin-top: 7px;
+}
+
+.bi.bi-linkedin {
+    color: #0077b5; /* LinkedIn's official blue color */
+}
+
+.mini-job-container .close-icon-col{
+    display: flex;
+    justify-content: end;
+}
+
+.mini-job-container .close-icon{
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+}
+
+.mini-job-container .close-icon:hover{
+    background-color: #F3F3F3;
+}
+
+
+.mini-job-container-deleted .reload-icon-col{
+    display: flex;
+    justify-content: end;
+    color: black;
+}
+
+.mini-job-container-deleted .reload-icon{
+    font-size: 20px;
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black !important;
+}
+
+.mini-job-container-deleted .reload-icon:hover{
+    background-color: #F3F3F3;
+}
+
+.deleted-text{
+    font-size: 12px;
+    color: green;
+}
+
+.mini-job-container-deleted .company-logo-col  img{
+    opacity: 0.3;
+}
