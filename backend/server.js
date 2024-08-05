@@ -11,7 +11,7 @@ dotenv.config();
 connectDB();
 
 const corsOptions = {
-    origin: ["http://localhost:3000", "http://www.api.jobslist.live", "http://api.jobslist.live", "https://www.api.jobslist.live", "https://api.jobslist.live", "https://www.jobslist.live", "https://main.d16idowmmspc1k.amplifyapp.com"], // Replace with your frontend origin
+    origin: ["http://localhost:3000", "https://www.jobslist.live", "https://jobslist.live", "https://main.d16idowmmspc1k.amplifyapp.com"],
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
     credentials: true
 };
@@ -24,13 +24,6 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-app.use((req, res, next) => {
-    console.log(`Received ${req.method} request for ${req.url}`);
-    console.log('Headers:', req.headers);
-    console.log('Body:', req.body);
-    next();
-});
 
 app.use("/api/status", (req, res) => {
     res.json({ status: "ok" });
