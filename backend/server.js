@@ -10,8 +10,8 @@ import fs from 'fs';
 
 
 const options = {
-	key: fs.readFileSync('./server.key'),
-	cert: fs.readFileSync('./server.cert')
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.cert')
 }
 
 
@@ -20,7 +20,7 @@ dotenv.config();
 connectDB();
 
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://www.jobslist.live","https://main.d16idowmmspc1k.amplifyapp.com"], // Replace with your frontend origin
+    origin: ["http://localhost:3000", "https://www.jobslist.live", "https://main.d16idowmmspc1k.amplifyapp.com"], // Replace with your frontend origin
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
     credentials: true
 };
@@ -34,8 +34,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use("/api/status", (req, res) => {
+    res.json({ status: "ok" });
+})
 app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
 
 
-https.createServer(options,app).listen(PORT, () => console.log(`Server started on port ${PORT}`))
+https.createServer(options, app).listen(PORT, () => console.log(`Server started on port ${PORT}`))
