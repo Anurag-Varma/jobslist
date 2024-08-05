@@ -5,15 +5,6 @@ import cookieParser from "cookie-parser";
 import jobRoutes from "./routes/jobRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cors from 'cors';
-import https from 'https';
-import fs from 'fs';
-
-
-const options = {
-    key: fs.readFileSync('./server.key'),
-    cert: fs.readFileSync('./server.cert')
-}
-
 
 dotenv.config();
 
@@ -41,4 +32,5 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
 
 
-https.createServer(options, app).listen(PORT, () => console.log(`Server started on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+
