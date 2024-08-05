@@ -20,7 +20,7 @@ dotenv.config();
 connectDB();
 
 const corsOptions = {
-    origin: ['http://localhost:3000'], // Replace with your frontend origin
+    origin: ["http://localhost:3000", "https://www.jobslist.live","https://main.d16idowmmspc1k.amplifyapp.com"], // Replace with your frontend origin
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
     credentials: true
 };
