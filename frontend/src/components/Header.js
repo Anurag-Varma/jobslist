@@ -27,7 +27,7 @@ function Header({ user, setSearchText, setSubmitSearch }) {
     const setAuthScreenState = useSetRecoilState(authScreenAtom);
     const handleLogout = async () => {
         try {
-            const apiUrl = process.env.BACKEND_API_URL;
+            const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             const res = await fetch(`${apiUrl}/api/users/logout`, {
                 method: 'POST',
                 headers: {

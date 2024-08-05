@@ -20,7 +20,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
 
     const [updateSource, setUpdateSource] = useState("");
 
-    const apiUrl = process.env.BACKEND_API_URL;
+    const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
 
     const searchJobs = async (data) => {
         try {
