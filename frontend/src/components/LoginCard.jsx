@@ -61,9 +61,10 @@ export default function LoginCard() {
         setLoading(true);
 
         try {
-            const apiUrl = process.env.BACKEND_API_URL;
+            const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             const res = await fetch(`${apiUrl}/api/users/login`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },

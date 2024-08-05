@@ -52,7 +52,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
 
     const handleDelete = async () => {
         try {
-            const apiUrl = process.env.BACKEND_API_URL;
+            const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             await axios.post(`${apiUrl}/api/jobs/deleteJob/`, {
                 "jobId": job._id
             }, {
