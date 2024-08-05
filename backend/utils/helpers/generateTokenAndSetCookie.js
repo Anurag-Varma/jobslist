@@ -8,10 +8,12 @@ const generateTokenAndSetCookie = (userId, res) => {
 
     res.cookie('jwt', token, {
         httpOnly: true,
-        sameSite: 'strict',
+	secure: true,
+        sameSite: 'None',
         maxAge: 1000 * 60 * 60 * 24 * 3
     });
 
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
 
 }
 

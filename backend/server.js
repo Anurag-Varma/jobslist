@@ -5,6 +5,14 @@ import cookieParser from "cookie-parser";
 import jobRoutes from "./routes/jobRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cors from 'cors';
+import https from 'https';
+import fs from 'fs';
+
+
+const options = {
+	key: fs.readFileSync('./server.key'),
+	cert: fs.readFileSync('./server.cert')
+}
 
 
 dotenv.config();
@@ -12,7 +20,7 @@ dotenv.config();
 connectDB();
 
 const corsOptions = {
-    origin: true, // Replace with your frontend origin
+    origin: ['http://localhost:3000'], // Replace with your frontend origin
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
     credentials: true
 };
@@ -30,4 +38,4 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
 
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+https.createServer(options,app).listen(PORT, () => console.log(`Server started on port ${PORT}`))
