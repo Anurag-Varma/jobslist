@@ -41,6 +41,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+    console.log('Request Headers:', req.headers);
+    next(); // Pass control to the next handler
+});
+
 app.use("/api/status", (req, res) => {
     res.json({ status: "ok" });
 })
