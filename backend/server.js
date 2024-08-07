@@ -46,6 +46,17 @@ app.use(cookieParser());
 app.use("/api/status", (req, res) => {
     res.json({ status: "ok" });
 })
+
+// Middleware to verify the custom header
+app.use((req, res, next) => {
+    const customAuth = req.headers['x-custom-auth-header'];
+    if (customAuth === process.env.CUSTOM_HEADER_SECRET) {
+        next();
+    } else {
+        res.status(403).send('Forbidden');
+    }
+});
+
 app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
 
