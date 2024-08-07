@@ -123,7 +123,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                                 </Col>
                             </Row>
                             <Row className="mb-3">
-                                {job && job.easyApply ?
+                                {job && !job.job_easy_apply ?
                                     (
                                         <Col>
                                             <Button className='job-info-direct-apply-button' variant="primary" onClick={handleJobInfoDirectButtonClick}>
