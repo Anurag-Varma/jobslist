@@ -22,3 +22,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+add_jobs_log.txt
+delete_jobs_log.txt
+/__pycache__
+/jobs/__pycache__
