@@ -12,7 +12,7 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(
     filename="delete_jobs_log.txt",  # Name of the log file
-    level=logging.ERROR,  # Log level
+    level=logging.INFO,  # Log level
     format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
 )
 
