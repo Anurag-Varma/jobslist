@@ -120,44 +120,50 @@ const getJobs = async (req, res) => {
 
 const addJob = async (req, res) => {
     try {
+        const user = req.user;
+
         const { job_url_direct, job_url_linkedin, job_title, job_company, job_location, job_type,
             job_experience_level, job_function, job_company_industry, job_description,
             job_company_linkedin_url, job_company_logo, job_easy_apply = "false"
         } = req.body;
 
-        const jobExists = await Job.findOne({
-            $or: [
-                { job_url_direct },
-                { job_url_linkedin },
-                { job_description }
-            ]
-        });
+        if (user.isAdmin) {
+            const jobExists = await Job.findOne({
+                $or: [
+                    { job_url_direct },
+                    { job_url_linkedin },
+                    { job_description }
+                ]
+            });
 
-        if (jobExists) {
-            return res.status(409).json({ error: "Job already exists" });
+            if (jobExists) {
+                return res.status(409).json({ error: "Job already exists" });
+            }
+
+            const newJob = new Job({
+                job_url_direct,
+                job_url_linkedin,
+                job_title,
+                job_company,
+                job_location,
+                job_type,
+                job_date_posted: new Date(req.body.job_date_posted),
+                job_experience_level,
+                job_function,
+                job_company_industry,
+                job_description,
+                job_company_linkedin_url,
+                job_company_logo,
+                job_easy_apply: job_easy_apply === "true",
+                job_active: true
+            });
+
+            await newJob.save();
+
+            res.status(201).json({ message: "Job created successfully", newJob });
+        } else {
+            res.status(401).json({ error: "Unauthorized" });
         }
-
-        const newJob = new Job({
-            job_url_direct,
-            job_url_linkedin,
-            job_title,
-            job_company,
-            job_location,
-            job_type,
-            job_date_posted: new Date(req.body.job_date_posted),
-            job_experience_level,
-            job_function,
-            job_company_industry,
-            job_description,
-            job_company_linkedin_url,
-            job_company_logo,
-            job_easy_apply: job_easy_apply === "true",
-            job_active: true
-        });
-
-        await newJob.save();
-
-        res.status(201).json({ message: "Job created successfully", newJob });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
