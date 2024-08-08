@@ -29,6 +29,21 @@ const getJob = async (req, res) => {
     }
 };
 
+const getJobIds = async (req, res) => {
+    try {
+        var jobs = await Job.find()
+            .sort({ createdAt: 1 })
+            .select('_id');
+        if (!jobs) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        res.status(200).json({ jobs });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 const getJobs = async (req, res) => {
     try {
         const user = req.user;
@@ -193,4 +208,4 @@ const deleteJob = async (req, res) => {
 
 
 
-export { getJobs, addJob, getJob, deleteJob };
+export { getJobs, addJob, getJob, deleteJob, getJobIds };
