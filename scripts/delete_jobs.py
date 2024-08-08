@@ -43,6 +43,8 @@ def _get_job_details(job_id: str) -> bool:
         response = session.get(
             f"{base_url}/jobs-guest/jobs/api/jobPosting/{job_id}", timeout=5
         )
+        if response.status_code == 404:
+            return True
         response.raise_for_status()
     except Exception as e:
         logging.error(f"Failed to get job details for {job_id}: {e}")
@@ -53,15 +55,9 @@ def _get_job_details(job_id: str) -> bool:
         return False
 
     soup = BeautifulSoup(response.text, "html.parser")
+
     div_content = soup.find(
         "figure", class_=lambda x: x and "closed-job" in x
-    )
-
-    if div_content:
-        return True
-    
-    div_content = soup.find(
-        "div", class_=lambda x: x and "error-code" in x
     )
 
     if div_content:
@@ -90,7 +86,6 @@ def send_post_to_get_cookie():
         return None
 
 cookie = send_post_to_get_cookie()
-
 
 def get_job_ids():
     try:
