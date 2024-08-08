@@ -24,7 +24,7 @@ try:
         site_name=["linkedin"],
         search_term="software engineer",
         location="United States",
-        results_wanted=10,
+        results_wanted=100,
         hours_old=24*1,  # Only Linkedin/Indeed is hour specific, others round up to days old
         country_indeed='USA',  # Only needed for indeed / glassdoor
         description_format='html',
@@ -52,7 +52,9 @@ def send_post_to_get_cookie():
         logging.error(f"Failed to get cookie: {e}")
         return None
 
-def send_post_request_to_add_jobs(job_data, cookie):
+cookie = send_post_to_get_cookie()
+
+def send_post_request_to_add_jobs(job_data):
     try:
         url = 'https://api-v1.jobslist.live/api/jobs/addJob'
         headers = {
@@ -64,7 +66,6 @@ def send_post_request_to_add_jobs(job_data, cookie):
 
         return response
     except Exception as e:
-        logging.error(f"Failed to add job: {e}")
         return None
 
 def remove_url_hash(input_string):
@@ -148,16 +149,10 @@ for index, job in jobs.iterrows():
             "job_active": "true"
         }
 
-        cookie = send_post_to_get_cookie()
-        if not cookie:
-            logging.error(f"Failed to get cookie for job: {job['title']}")
-            continue
-
-        response = send_post_request_to_add_jobs(json.dumps(job_data), cookie)
-        if response:
-            if response.status_code == 200 or response.status_code == 201:
-                logging.info(f"Successfully sent job: {job['title']}")
-            else:
-                logging.error(f"Failed to send job: {job['title']}, Response: {response.text}")
+        response = send_post_request_to_add_jobs(json.dumps(job_data))
+        if response and (response.status_code == 200 or response.status_code == 201):
+            logging.info(f"Successfully sent job: {job['title']}")
+        else:
+            logging.error(f"Failed to send job: {job['title']}, Response: {response.text}")
     except Exception as e:
         logging.error(f"Error processing job {job.get('title', 'unknown')}: {e}")
