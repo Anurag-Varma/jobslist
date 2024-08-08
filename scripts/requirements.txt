@@ -1,3 +1,4 @@
 jobspy
 requests
 pandas
+python-dotenv

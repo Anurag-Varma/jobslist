@@ -1,8 +1,11 @@
 from utils import create_session
 from bs4 import BeautifulSoup
+import requests
+import json
+from dotenv import load_dotenv
+import os
 
-
-
+load_dotenv()
 
 base_url = "https://www.linkedin.com"
 
@@ -38,11 +41,10 @@ def _get_job_details(job_id: str) -> bool:
             )
             response.raise_for_status()
         except Exception as e:
-            print(e)
-            return {}
+            return False
         
         if "linkedin.com/signup" in response.url:
-            return {}
+            return False
 
         soup = BeautifulSoup(response.text, "html.parser")
         div_content = soup.find(
@@ -53,5 +55,63 @@ def _get_job_details(job_id: str) -> bool:
              return True
 
         return False
-  
-print(_get_job_details("3986733752"))
+
+def send_post_to_get_cookie():
+    url = "https://api-v1.jobslist.live/api/users/login"
+
+    payload = json.dumps({
+      "email": os.getenv("EMAIL"),
+      "password": os.getenv("PASSWORD")
+    })
+    headers = {
+      'Referer': 'https://www.jobslist.live',
+      'Content-Type': 'application/json',
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    return response.headers["Set-Cookie"].split(';')[0]
+
+def get_job_ids():
+    url = "https://api-v1.jobslist.live/api/jobs/getJobIds"
+
+    cookie = send_post_to_get_cookie()
+
+    headers = {
+        'Referer': 'https://www.jobslist.live',
+        'Content-Type': 'application/json',
+        'Cookie': cookie
+    }
+
+    response = requests.request("GET", url, headers=headers)
+
+    return response.json()["jobs"]
+
+def delete_job(job_id):
+    url = f"https://api-v1.jobslist.live/api/jobs/deleteJob"
+
+    cookie = send_post_to_get_cookie()
+
+    headers = {
+        'Referer': 'https://www.jobslist.live',
+        'Content-Type': 'application/json',
+        'Cookie': cookie
+    }
+
+    response = requests.request("POST", url, headers=headers)
+
+    return response
+
+jobs = get_job_ids()
+
+for job in jobs:
+     try:
+        id = job["_id"]
+        if(_get_job_details(id)):
+            delete_job(id)
+     except Exception as e:
+        print(e)
+
+          
+          
+
