@@ -106,9 +106,12 @@ jobs = get_job_ids()
 
 for job in jobs:
      try:
-        id = job["_id"]
+        id = job["job_url_linkedin"].split('/')[-2]
         if(_get_job_details(id)):
             delete_job(id)
+            print("deleted: " + id)
+        else:
+            print("not deleted: " + id)
      except Exception as e:
         print(e)
 

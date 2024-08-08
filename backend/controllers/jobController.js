@@ -33,7 +33,7 @@ const getJobIds = async (req, res) => {
     try {
         var jobs = await Job.find()
             .sort({ createdAt: 1 })
-            .select('_id');
+            .select('job_url_linkedin');
         if (!jobs) {
             return res.status(404).json({ message: "Job not found" });
         }
