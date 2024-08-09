@@ -407,7 +407,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                             label="Entry Level"
                                             value="Entry Level"
                                             id='experienceLevels-entry-level'
-                                            checked={formState.experienceLevels.includes('Entry level')}
+                                            checked={formState.experienceLevels.includes('Entry Level')}
                                             onChange={handleChange}
                                         />
                                     </Col>
