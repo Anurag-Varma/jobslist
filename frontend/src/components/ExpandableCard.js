@@ -431,7 +431,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                             label="Mid-Senior Level"
                                             value="Mid-Senior Level"
                                             id='experienceLevels-mid-senior-level'
-                                            checked={formState.experienceLevels.includes('Mid-Senior level')}
+                                            checked={formState.experienceLevels.includes('Mid-Senior Level')}
                                             onChange={handleChange}
                                         />
                                     </Col>
