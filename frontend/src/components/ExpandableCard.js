@@ -404,8 +404,8 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                         <Form.Check
                                             type="checkbox"
                                             name="experienceLevels"
-                                            label="Entry level"
-                                            value="Entry level"
+                                            label="Entry Level"
+                                            value="Entry Level"
                                             id='experienceLevels-entry-level'
                                             checked={formState.experienceLevels.includes('Entry level')}
                                             onChange={handleChange}
@@ -428,8 +428,8 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                         <Form.Check
                                             type="checkbox"
                                             name="experienceLevels"
-                                            label="Mid-Senior level"
-                                            value="Mid-Senior level"
+                                            label="Mid-Senior Level"
+                                            value="Mid-Senior Level"
                                             id='experienceLevels-mid-senior-level'
                                             checked={formState.experienceLevels.includes('Mid-Senior level')}
                                             onChange={handleChange}
