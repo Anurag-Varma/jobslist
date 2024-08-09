@@ -19,6 +19,7 @@ logging.basicConfig(
 )
 
 # Scrape jobs
+jobs=pd.DataFrame()
 try:
     jobs = scrape_jobs(
         site_name=["linkedin"],
@@ -33,7 +34,6 @@ try:
     logging.info(f"Found {len(jobs)} jobs")
 except Exception as e:
     logging.error(f"Error scraping jobs: {e}")
-    jobs = pd.DataFrame()  # Initialize an empty DataFrame if scraping fails
 
 def send_post_to_get_cookie():
     try:

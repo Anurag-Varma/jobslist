@@ -122,6 +122,7 @@ def delete_job(job_id):
         return None
 
 jobs = get_job_ids()
+logging.info(f"Found {len(jobs)} jobs")
 
 for job in jobs:
     try:
