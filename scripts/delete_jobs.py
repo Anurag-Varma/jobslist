@@ -1,4 +1,3 @@
-import logging
 from utils import create_session
 from bs4 import BeautifulSoup
 import requests
@@ -8,13 +7,6 @@ import os
 
 # Load environment variables
 load_dotenv()
-
-# Configure logging
-logging.basicConfig(
-    filename="delete_jobs_log.txt",  # Name of the log file
-    level=logging.INFO,  # Log level
-    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
-)
 
 base_url = "https://www.linkedin.com"
 
@@ -47,11 +39,11 @@ def _get_job_details(job_id: str) -> bool:
             return True
         response.raise_for_status()
     except Exception as e:
-        logging.error(f"Failed to get job details for {job_id}: {e}")
+        print(f"Failed to get job details for {job_id}: {e}")
         return False
     
     if "linkedin.com/signup" in response.url:
-        logging.info(f"Redirected to signup page for {job_id}")
+        print(f"Redirected to signup page for {job_id}")
         return False
 
     soup = BeautifulSoup(response.text, "html.parser")
@@ -82,7 +74,7 @@ def send_post_to_get_cookie():
 
         return response.headers["Set-Cookie"].split(';')[0]
     except Exception as e:
-        logging.error(f"Failed to get cookie: {e}")
+        print(f"Failed to get cookie: {e}")
         return None
 
 cookie = send_post_to_get_cookie()
@@ -101,7 +93,7 @@ def get_job_ids():
 
         return response.json()["jobs"]
     except Exception as e:
-        logging.error(f"Failed to get job IDs: {e}")
+        print(f"Failed to get job IDs: {e}")
         return []
 
 def delete_job(job_id):
@@ -118,19 +110,19 @@ def delete_job(job_id):
 
         return response
     except Exception as e:
-        logging.error(f"Failed to delete job {job_id}: {e}")
+        print(f"Failed to delete job {job_id}: {e}")
         return None
 
 jobs = get_job_ids()
-logging.info(f"Found {len(jobs)} jobs")
+print(f"Found {len(jobs)} jobs")
 
 for job in jobs:
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
         if _get_job_details(job_id):
             delete_job(job_id)
-            logging.info(f"Deleted job: {job_id}")
+            print(f"Deleted job: {job_id}")
         else:
-            logging.info(f"Not deleted (job might be open): {job_id}")
+            print(f"Not deleted (job might be open): {job_id}")
     except Exception as e:
-        logging.error(f"Error processing job {job['job_url_linkedin']}: {e}")
+        print(f"Failed to delete job {job['job_url_linkedin']}: {e}")

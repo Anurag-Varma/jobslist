@@ -1,4 +1,3 @@
-import logging
 from jobspy import scrape_jobs
 import requests
 from datetime import datetime
@@ -10,13 +9,6 @@ import os
 
 # Load environment variables
 load_dotenv()
-
-# Configure logging
-logging.basicConfig(
-    filename="add_jobs_log.txt",  # Name of the log file
-    level=logging.INFO,  # Log level
-    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
-)
 
 # Scrape jobs
 jobs=pd.DataFrame()
@@ -31,9 +23,9 @@ try:
         description_format='html',
         linkedin_fetch_description=True,  # Get full description, direct job URL, company industry, and job level for LinkedIn
     )
-    logging.info(f"Found {len(jobs)} jobs")
+    print(f"Found {len(jobs)} jobs")
 except Exception as e:
-    logging.error(f"Error scraping jobs: {e}")
+    print(f"Error scraping jobs: {e}")
 
 def send_post_to_get_cookie():
     try:
@@ -49,7 +41,7 @@ def send_post_to_get_cookie():
         response = requests.post(url, headers=headers, data=payload)
         return response.headers["Set-Cookie"].split(';')[0]
     except Exception as e:
-        logging.error(f"Failed to get cookie: {e}")
+        print(f"Failed to get cookie: {e}")
         return None
 
 cookie = send_post_to_get_cookie()
@@ -151,8 +143,8 @@ for index, job in jobs.iterrows():
 
         response = send_post_request_to_add_jobs(json.dumps(job_data))
         if response and (response.status_code == 200 or response.status_code == 201):
-            logging.info(f"Successfully sent job: {job['title']}")
+            print(f"Job added: {job['title']}")
         else:
-            logging.error(f"Failed to send job: {job['title']}, Response: {response.text}")
+            print(f"Failed to add job: {job['title']}")
     except Exception as e:
-        logging.error(f"Error processing job {job.get('title', 'unknown')}: {e}")
+        print(f"Error processing job {job['title']}: {e}")
