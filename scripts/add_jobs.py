@@ -23,9 +23,9 @@ try:
         description_format='html',
         linkedin_fetch_description=True,  # Get full description, direct job URL, company industry, and job level for LinkedIn
     )
-    print(f"Found {len(jobs)} jobs")
+    print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Found {len(jobs)} jobs")
 except Exception as e:
-    print(f"Error scraping jobs: {e}")
+    print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Error scraping jobs: {e}")
 
 def send_post_to_get_cookie():
     try:
@@ -41,7 +41,7 @@ def send_post_to_get_cookie():
         response = requests.post(url, headers=headers, data=payload)
         return response.headers["Set-Cookie"].split(';')[0]
     except Exception as e:
-        print(f"Failed to get cookie: {e}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Failed to get cookie: {e}")
         return None
 
 cookie = send_post_to_get_cookie()
@@ -143,8 +143,8 @@ for index, job in jobs.iterrows():
 
         response = send_post_request_to_add_jobs(json.dumps(job_data))
         if response and (response.status_code == 200 or response.status_code == 201):
-            print(f"Job added: {job['title']}")
+            print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Job added: {job['title']}")
         else:
-            print(f"Failed to add job: {job['title']}")
+            print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to add job: {job['title']}")
     except Exception as e:
-        print(f"Error processing job {job['title']}: {e}")
+        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Error processing job {job['title']}: {e}")

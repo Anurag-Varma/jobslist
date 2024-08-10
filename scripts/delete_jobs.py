@@ -4,6 +4,7 @@ import requests
 import json
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 # Load environment variables
 load_dotenv()
@@ -39,11 +40,11 @@ def _get_job_details(job_id: str) -> bool:
             return True
         response.raise_for_status()
     except Exception as e:
-        print(f"Failed to get job details for {job_id}: {e}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]}+Failed to get job details for {job_id}: {e}")
         return False
     
     if "linkedin.com/signup" in response.url:
-        print(f"Redirected to signup page for {job_id}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Redirected to signup page for {job_id}")
         return False
 
     soup = BeautifulSoup(response.text, "html.parser")
@@ -74,7 +75,7 @@ def send_post_to_get_cookie():
 
         return response.headers["Set-Cookie"].split(';')[0]
     except Exception as e:
-        print(f"Failed to get cookie: {e}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Failed to get cookie: {e}")
         return None
 
 cookie = send_post_to_get_cookie()
@@ -93,7 +94,7 @@ def get_job_ids():
 
         return response.json()["jobs"]
     except Exception as e:
-        print(f"Failed to get job IDs: {e}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Failed to get job IDs: {e}")
         return []
 
 def delete_job(job_id):
@@ -110,19 +111,19 @@ def delete_job(job_id):
 
         return response
     except Exception as e:
-        print(f"Failed to delete job {job_id}: {e}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Failed to delete job {job_id}: {e}")
         return None
 
 jobs = get_job_ids()
-print(f"Found {len(jobs)} jobs")
+print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Found {len(jobs)} jobs")
 
 for job in jobs:
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
         if _get_job_details(job_id):
             delete_job(job_id)
-            print(f"Deleted job: {job_id}")
+            print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Deleted job: {job_id}")
         else:
-            print(f"Not deleted (job might be open): {job_id}")
+            print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Not deleted (job might be open): {job_id}")
     except Exception as e:
-        print(f"Failed to delete job {job['job_url_linkedin']}: {e}")
+        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Failed to delete job {job['job_url_linkedin']}: {e}")
