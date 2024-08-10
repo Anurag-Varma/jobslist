@@ -115,7 +115,7 @@ def delete_job(job_id):
         return None
 
 jobs = get_job_ids()
-print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Found {len(jobs)} jobs")
+print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
 
 for job in jobs:
     try:
