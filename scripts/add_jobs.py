@@ -23,9 +23,9 @@ try:
         description_format='html',
         linkedin_fetch_description=True,  # Get full description, direct job URL, company industry, and job level for LinkedIn
     )
-    print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Found {len(jobs)} jobs")
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
 except Exception as e:
-    print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Error scraping jobs: {e}")
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Error scraping jobs: {e}")
 
 def send_post_to_get_cookie():
     try:
@@ -41,7 +41,7 @@ def send_post_to_get_cookie():
         response = requests.post(url, headers=headers, data=payload)
         return response.headers["Set-Cookie"].split(';')[0]
     except Exception as e:
-        print(f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]} Failed to get cookie: {e}")
+        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to get cookie: {e}")
         return None
 
 cookie = send_post_to_get_cookie()
