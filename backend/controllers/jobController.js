@@ -114,7 +114,8 @@ const getJobs = async (req, res) => {
 
         var jobs = await Job.find(filter)
             .sort({ createdAt: -1 })
-            .select('job_title job_company job_location job_easy_apply job_company_logo _id');
+            .select('job_title job_company job_location job_easy_apply job_company_logo _id')
+            .limit(500);
 
         if (show_jobs_applied == "true" || show_jobs_viewed == "true") {
             jobs = jobs.map(job => {

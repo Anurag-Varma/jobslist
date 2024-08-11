@@ -154,7 +154,7 @@ const JobsList = ({ defaultJob, handleSetDefaultJob, setTotalJobCount, totalJobC
 
     // State to manage pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10; // Number of items per page
+    const itemsPerPage = 25; // Number of items per page
 
     // Calculate the total number of pages
     var totalPages = 0;
