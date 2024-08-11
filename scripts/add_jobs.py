@@ -154,15 +154,7 @@ roles = [
     "Frontend Developer",
     "Backend Developer",
     "Machine Learning Engineer",
-    "Database Administrator",
-    "API Developer",
-    "DevOps Engineer",
-    "Cloud Engineer",
-    "Quality Assurance Engineer",
-    "Mobile App Developer",
-    "UI and UX Designer",
-    "Site Reliability Engineer",
-    "Security Engineer"
+    "API Developer"
 ]
 
 # Get the authentication cookie
