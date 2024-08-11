@@ -5,6 +5,7 @@ import json
 from dotenv import load_dotenv
 import os
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Load environment variables
 load_dotenv()
@@ -107,23 +108,30 @@ def delete_job(job_id):
             'Cookie': cookie
         }
 
-        response = requests.request("POST", url, headers=headers)
+        response = requests.request("POST", url, headers=headers, json={"job_id": job_id})
 
         return response
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job {job_id}: {e}")
         return None
 
-jobs = get_job_ids()
-print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
-
-for job in jobs:
+def process_job(job):
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
         if _get_job_details(job_id):
-            delete_job(job_id)
-            print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")
+            response = delete_job(job_id)
+            if response:
+                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")
         else:
             print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Not deleted (job might be open): {job_id}")
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job {job['job_url_linkedin']}: {e}")
+
+jobs = get_job_ids()
+print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
+
+# Use ThreadPoolExecutor to process jobs concurrently
+with ThreadPoolExecutor(max_workers=10) as executor:
+    futures = [executor.submit(process_job, job) for job in jobs]
+    for future in as_completed(futures):
+        future.result()  # Handle any exceptions raised
