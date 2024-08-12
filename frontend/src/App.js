@@ -4,8 +4,8 @@ import AuthPage from './pages/AuthPage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import userAtom from '../atoms/userAtom';
-import authScreenAtom from '../atoms/authAtom';
+import userAtom from './atoms/userAtom';
+import authScreenAtom from './atoms/authAtom';
 
 
 import Cookies from 'js-cookie';
