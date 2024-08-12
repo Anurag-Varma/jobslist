@@ -4,39 +4,31 @@ import AuthPage from './pages/AuthPage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
+import Cookies from 'js-cookie';
 import userAtom from './atoms/userAtom';
 
 function App() {
   const [user, setUser] = useState(null);
   const currentUser = useRecoilValue(userAtom);
 
-  const getCookieValue = (name) => {
-    const value = `; ${document.cookie}`;
-    console.log(document.cookie)
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-  };
-
   useEffect(() => {
-    const jwtToken = getCookieValue('jwt');
+    const checkAuthStatus = () => {
+      const jwtToken = Cookies.get('jwt');
+      if (jwtToken) {
+        // If the cookie is present, use the value from Recoil
+        setUser(currentUser);
+      } else {
+        // If the cookie is not present, set user to null
+        setUser(null);
+      }
+    };
 
-    console.log(jwtToken)
-
-    if (jwtToken) {
-      // If the cookie is present, use the value from Recoil
-      setUser(currentUser);
-    } else {
-      // If the cookie is not present, set user to null
-      setUser(null);
-    }
+    // Initial check on component mount
+    checkAuthStatus();
 
     // Periodic check every 60 seconds
     const intervalId = setInterval(() => {
-      const updatedJwtToken = getCookieValue('jwt');
-      if (!updatedJwtToken) {
-        setUser(null);
-      }
+      checkAuthStatus();
     }, 60000);
 
     // Clean up the interval on component unmount
