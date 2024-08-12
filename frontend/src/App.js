@@ -12,6 +12,7 @@ function App() {
 
   const getCookieValue = (name) => {
     const value = `; ${document.cookie}`;
+    console.log(document.cookie)
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
@@ -19,6 +20,8 @@ function App() {
 
   useEffect(() => {
     const jwtToken = getCookieValue('jwt');
+
+    console.log(jwtToken)
 
     if (jwtToken) {
       // If the cookie is present, use the value from Recoil
