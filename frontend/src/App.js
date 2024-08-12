@@ -4,7 +4,7 @@ import AuthPage from './pages/AuthPage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import userAtom from './atoms/userAtom';
+import userAtom from '../atoms/userAtom';
 import authScreenAtom from '../atoms/authAtom';
 
 
@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     const checkCookieExpiration = () => {
       const cookie = Cookies.get('jwt');
-      if (cookie && isCookieExpired(cookie)) {
+      if (!cookie || isCookieExpired(cookie)) {
         localStorage.removeItem('jobs-list');
         setUser(null);
         setAuthScreenState('login');
