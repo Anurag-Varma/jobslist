@@ -1,39 +1,48 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import userAtom from './atoms/userAtom';
 
 function App() {
-  const user = useRecoilValue(userAtom);
-  const setUser = useSetRecoilState(userAtom);
+  const [user, setUser] = useState(null);
+  const currentUser = useRecoilValue(userAtom);
+
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
 
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const jwtCookie = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('jwt='));
+    const jwtToken = getCookieValue('jwt');
 
-      if (!jwtCookie) {
+    if (jwtToken) {
+      // If the cookie is present, use the value from Recoil
+      setUser(currentUser);
+    } else {
+      // If the cookie is not present, set user to null
+      setUser(null);
+    }
+
+    // Periodic check every 60 seconds
+    const intervalId = setInterval(() => {
+      const updatedJwtToken = getCookieValue('jwt');
+      if (!updatedJwtToken) {
         setUser(null);
       }
-    };
-
-    // Call the checkAuthStatus function on component mount
-    checkAuthStatus();
-
-    // Optionally, set up a timer to periodically check the user's auth status
-    const intervalId = setInterval(checkAuthStatus, 60000); // Check every 60 seconds
+    }, 60000);
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
-  }, [setUser]);
+  }, [currentUser]);
 
   return (
     <Routes>
-      <Route path="/" element={user ? <HomePage user={user} /> : <Navigate to="/auth" />} />
+      <Route path="/" element={user ? <HomePage /> : <Navigate to="/auth" />} />
       <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" />} />
     </Routes>
   );
