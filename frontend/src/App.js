@@ -1,52 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import userAtom from './atoms/userAtom';
 
-function App() {
-  const [user, setUser] = useState(null);
-  const currentUser = useRecoilValue(userAtom);
+import Cookies from 'js-cookie';
 
-  const updateUserState = () => {
-    const jwtToken = Cookies.get('jwt');
-    if (jwtToken) {
-      // If the cookie is present, use the value from Recoil
-      setUser(currentUser);
-    } else {
-      // If the cookie is not present, set user to null
-      setUser(null);
+function isCookieExpired(cookie) {
+  const cookieParts = cookie.split(';');
+
+  for (let i = 0; i < cookieParts.length; i++) {
+    const cookiePart = cookieParts[i].trim();
+    if (cookiePart.startsWith('expires=')) {
+      const expiresDate = new Date(cookiePart.substring('expires='.length));
+      return expiresDate < new Date(); // If the expiration date is in the past, the cookie is expired
     }
-  };
+  }
+
+  // If no expiration date is found, the cookie is considered session-based and not expired
+  return false;
+}
+
+function App() {
+  const [user, setUser] = useRecoilState(userAtom);
 
   useEffect(() => {
-    // Initial check on component mount
-    updateUserState();
-
-    // Periodic check every 60 seconds
-    const intervalId = setInterval(() => {
-      updateUserState();
-    }, 60000);
-
-    // Event listener for storage changes (handles changes in other tabs)
-    window.addEventListener('storage', updateUserState);
-
-    // Clean up the interval and event listener on component unmount
-    return () => {
-      clearInterval(intervalId);
-      window.removeEventListener('storage', updateUserState);
+    const checkCookieExpiration = () => {
+      const cookie = Cookies.get('jwt');
+      if (cookie && isCookieExpired(cookie)) {
+        setUser(null);
+      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+
+    checkCookieExpiration();
+  }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={user ? <HomePage /> : <Navigate to="/auth" />} />
-      <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={user ? <HomePage user={user} /> : <Navigate to="/auth" />} />
+        <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" />} />
+      </Routes>
+    </>
   );
 }
 
