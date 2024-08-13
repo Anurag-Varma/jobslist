@@ -3,10 +3,8 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import userAtom from './atoms/userAtom';
-import authScreenAtom from './atoms/authAtom';
-
 
 import Cookies from 'js-cookie';
 
@@ -26,17 +24,13 @@ function isCookieExpired(cookie) {
 }
 
 function App() {
-  const user = useRecoilState(userAtom);
-  const setUser = useSetRecoilState(userAtom);
-  const setAuthScreenState = useSetRecoilState(authScreenAtom);
+  const [user, setUser] = useRecoilState(userAtom);
 
   useEffect(() => {
     const checkCookieExpiration = () => {
       const cookie = Cookies.get('jwt');
-      if (!cookie || isCookieExpired(cookie)) {
-        localStorage.removeItem('jobs-list');
+      if (cookie && isCookieExpired(cookie)) {
         setUser(null);
-        setAuthScreenState('login');
       }
     };
 
