@@ -191,16 +191,10 @@ const addJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
     try {
-        const job = await Job.findById(req.body.jobId);
         const user = req.user;
 
-        if (!job) {
-            return res.status(404).json({ error: "Job not found" });
-        }
-
         if (user.isAdmin) {
-            job.job_active = false;
-            await job.save();
+            await Job.findByIdAndDelete(req.body.jobId);
             res.status(200).json({ message: "Job deleted successfully" });
         } else {
             res.status(401).json({ error: "Unauthorized" });
