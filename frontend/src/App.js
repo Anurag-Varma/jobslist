@@ -32,6 +32,8 @@ function App() {
   useEffect(() => {
     const checkCookieExpiration = () => {
       const cookie = Cookies.get('jwt');
+      document.cookie.split(';').forEach(cookie => console.log(cookie));
+
       console.log(cookie)
       if (!cookie || isCookieExpired(cookie)) {
         localStorage.removeItem('jobs-list');
