@@ -26,7 +26,8 @@ function isCookieExpired(cookie) {
 }
 
 function App() {
-  const [user, setUser] = useRecoilState(userAtom);
+  const user = useRecoilState(userAtom);
+  const setUser = useSetRecoilState(userAtom);
   const setAuthScreenState = useSetRecoilState(authScreenAtom);
 
   useEffect(() => {
