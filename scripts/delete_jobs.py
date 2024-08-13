@@ -108,7 +108,7 @@ def delete_job(job_id):
             'Cookie': cookie
         }
 
-        response = requests.request("POST", url, headers=headers, json={"job_id": job_id})
+        response = requests.request("POST", url, headers=headers, json={"jobId": job_id})
 
         return response
     except Exception as e:
@@ -119,7 +119,7 @@ def process_job(job):
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
         if _get_job_details(job_id):
-            response = delete_job(job_id)
+            response = delete_job(job["_id"])
             if response:
                 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")
         else:
