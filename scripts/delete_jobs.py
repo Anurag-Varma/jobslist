@@ -118,10 +118,10 @@ def delete_job(job_id):
 def process_job(job):
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
-        created_at = job["createdAt"]
+        created_at = created_at = datetime.strptime(job["createdAt"], '%Y-%m-%dT%H:%M:%S.%fZ')
         
         # Check if the job's createdAt date is more than 7 days old
-        if datetime.now() - created_at > timedelta(days=7):
+        if datetime.now() - created_at > timedelta(days=8):
             response = delete_job(job["_id"])
             if response:
                 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id} (older than 7 days)")
@@ -137,7 +137,7 @@ def process_job(job):
                 
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job {job['job_url_linkedin']}: {e}")
-        
+
 jobs = get_job_ids()
 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
 
