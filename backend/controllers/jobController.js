@@ -59,7 +59,7 @@ const getJobs = async (req, res) => {
             job_function = [],
             job_company_industry = [],
             job_easy_apply = "false",
-            show_jobs_applied = "false",
+            // show_jobs_applied = "false",
             show_jobs_viewed = "false",
             job_date_posted = "any",
             tags = []
@@ -82,8 +82,9 @@ const getJobs = async (req, res) => {
 
         const combinedArray = [
             ...user.deleted,
-            ...(show_jobs_applied === "false" && show_jobs_viewed === "false" ? [...user.applied, ...user.viewed] : []),
-            ...(show_jobs_applied === "true" && show_jobs_viewed === "false" ? user.viewed.filter(id => !user.applied.includes(id)) : [])
+            ...(show_jobs_viewed === "false" ? [...user.applied, ...user.viewed] : [])
+            // ...(show_jobs_applied === "false" && show_jobs_viewed === "false" ? [...user.applied, ...user.viewed] : [])
+            // ...(show_jobs_applied === "true" && show_jobs_viewed === "false" ? user.viewed.filter(id => !user.applied.includes(id)) : [])
         ];
         if (combinedArray.length) filter._id = { $nin: [...new Set(combinedArray.map(id => id.toString()))] };
 
@@ -117,7 +118,8 @@ const getJobs = async (req, res) => {
             .select('job_title job_company job_location job_easy_apply job_company_logo _id')
             .limit(500);
 
-        if (show_jobs_applied == "true" || show_jobs_viewed == "true") {
+        // if (show_jobs_applied == "true" || show_jobs_viewed == "true") {
+        if (show_jobs_viewed == "true") {
             jobs = jobs.map(job => {
                 const isApplied = user.applied.some(id => id.equals(job._id));
                 const isViewed = user.viewed.some(id => id.equals(job._id));

@@ -147,7 +147,8 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
             "job_function": formState.jobFunctions,
             "job_company_industry": formState.industries,
             "job_easy_apply": formState.easyApply ? "true" : "false",
-            "show_jobs_applied": formState.appliedJobs ? "true" : "false",
+            "show_jobs_applied": "false",
+            // "show_jobs_applied": formState.appliedJobs ? "true" : "false",
             "show_jobs_viewed": formState.viewedJobs ? "true" : "false",
             "job_date_posted": formState.datePosted,
             "tags": tags
@@ -345,7 +346,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                             </div>
                             <hr />
 
-                            <div className='applied-jobs-div'>
+                            {/* <div className='applied-jobs-div'>
                                 <Row>
                                     <Col>
                                         <h5>Applied jobs</h5>
@@ -363,12 +364,12 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                     </Col>
                                 </Row>
                             </div>
-                            <hr />
+                            <hr /> */}
 
                             <div className='viewed-jobs-div'>
                                 <Row>
                                     <Col>
-                                        <h5>Viewed jobs</h5>
+                                        <h5>Applied/Viewed jobs</h5>
                                     </Col>
                                     <Col>
                                         <Form.Check
@@ -463,6 +464,27 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                             </div>
                             <hr />
 
+                            <div className='expandable-keywords'>
+                                <h5 className='mb-3'>Hide jobs having the keywords:</h5>
+
+                                <div>
+                                    <input
+                                        type="text"
+                                        value={inputTagValue}
+                                        onChange={handleChangeTag}
+                                        onKeyDown={handleKeyDownTag}
+                                        placeholder="Type a Keyword and press Enter"
+                                    />
+                                </div>
+                                <div className='expandable-keywords-div'>
+                                    {tags.map((tag, index) => (
+                                        <Badge key={index} className='expandable-keywords-badge' onClick={() => handleRemoveTag(index)}>
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+                            <hr />
 
                             <div>
                                 <h5 className='mb-3'>Location</h5>
@@ -566,28 +588,6 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                         </Row>
                                     ) : null
                                 ))}
-                            </div>
-                            <hr />
-
-                            <div className='expandable-keywords'>
-                                <h5 className='mb-3'>Hide jobs/companies</h5>
-
-                                <div>
-                                    <input
-                                        type="text"
-                                        value={inputTagValue}
-                                        onChange={handleChangeTag}
-                                        onKeyDown={handleKeyDownTag}
-                                        placeholder="Type a Keyword and press Enter"
-                                    />
-                                </div>
-                                <div className='expandable-keywords-div'>
-                                    {tags.map((tag, index) => (
-                                        <Badge key={index} className='expandable-keywords-badge' onClick={() => handleRemoveTag(index)}>
-                                            {tag}
-                                        </Badge>
-                                    ))}
-                                </div>
                             </div>
 
                         </Form>
