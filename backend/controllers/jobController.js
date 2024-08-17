@@ -31,11 +31,7 @@ const getJob = async (req, res) => {
 
 const getJobIds = async (req, res) => {
     try {
-        const filter = {
-            job_active: true,
-        };
-
-        var jobs = await Job.find(filter)
+        var jobs = await Job.find()
             .sort({ createdAt: 1 })
             .select('job_url_linkedin');
         if (!jobs) {
