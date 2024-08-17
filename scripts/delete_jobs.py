@@ -4,7 +4,7 @@ import requests
 import json
 from dotenv import load_dotenv
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Load environment variables
@@ -118,15 +118,26 @@ def delete_job(job_id):
 def process_job(job):
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
-        if _get_job_details(job_id):
+        created_at = job["createdAt"]
+        
+        # Check if the job's createdAt date is more than 7 days old
+        if datetime.now() - created_at > timedelta(days=7):
             response = delete_job(job["_id"])
             if response:
-                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")
+                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id} (older than 7 days)")
+            else:
+                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job (older than 7 days): {job_id}")
         else:
-            print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Not deleted (job might be open): {job_id}")
+            if _get_job_details(job_id):
+                response = delete_job(job["_id"])
+                if response:
+                    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")
+            else:
+                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Not deleted (job might be open): {job_id}")
+                
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job {job['job_url_linkedin']}: {e}")
-
+        
 jobs = get_job_ids()
 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
 
