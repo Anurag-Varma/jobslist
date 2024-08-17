@@ -200,10 +200,10 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                         <Form.Check
                                             type="radio"
                                             name="datePosted"
-                                            label="Past Month"
-                                            value="month"
-                                            id='datePosted-month'
-                                            checked={formState.datePosted === 'month'}
+                                            label="Past 5 days"
+                                            value="5days"
+                                            id='datePosted-5days'
+                                            checked={formState.datePosted === '5days'}
                                             onChange={handleChange}
                                         />
                                     </Col>
@@ -213,10 +213,10 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                         <Form.Check
                                             type="radio"
                                             name="datePosted"
-                                            label="Past week"
-                                            value="week"
-                                            id='datePosted-week'
-                                            checked={formState.datePosted === 'week'}
+                                            label="Past 3 days"
+                                            value="3days"
+                                            id='datePosted-3days'
+                                            checked={formState.datePosted === '3days'}
                                             onChange={handleChange}
                                         />
                                     </Col>

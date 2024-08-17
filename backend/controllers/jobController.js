@@ -5,10 +5,10 @@ const getDateFilter = (job_date_posted) => {
     switch (job_date_posted) {
         case "day":
             return { $gte: new Date(now - 24 * 60 * 60 * 1000) }; // 24 hours
-        case "week":
-            return { $gte: new Date(now - 7 * 24 * 60 * 60 * 1000) }; // 7 days
-        case "month":
-            return { $gte: new Date(now - 30 * 24 * 60 * 60 * 1000) }; // 30 days
+        case "3days":
+            return { $gte: new Date(now - 3 * 24 * 60 * 60 * 1000) }; // 7 days
+        case "5days":
+            return { $gte: new Date(now - 5 * 24 * 60 * 60 * 1000) }; // 30 days
         default:
             return null;
     }
