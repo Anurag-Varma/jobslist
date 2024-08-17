@@ -142,7 +142,7 @@ jobs = get_job_ids()
 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Found {len(jobs)} jobs")
 
 # Use ThreadPoolExecutor to process jobs concurrently
-with ThreadPoolExecutor(max_workers=10) as executor:
+with ThreadPoolExecutor(max_workers=5) as executor:
     futures = [executor.submit(process_job, job) for job in jobs]
     for future in as_completed(futures):
         future.result()  # Handle any exceptions raised
