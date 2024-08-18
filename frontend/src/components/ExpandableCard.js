@@ -369,7 +369,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                             <div className='viewed-jobs-div'>
                                 <Row>
                                     <Col>
-                                        <h5>Previously Viewed jobs</h5>
+                                        <h5>Recently Viewed jobs</h5>
                                     </Col>
                                     <Col>
                                         <Form.Check
