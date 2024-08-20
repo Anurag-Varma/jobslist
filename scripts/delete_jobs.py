@@ -54,7 +54,9 @@ def _get_job_details(job_id: str) -> bool:
         "figure", class_=lambda x: x and "closed-job" in x
     )
 
-    if div_content:
+    closed_job = soup.find("figcaption", class_="closed-job__flavor--closed")
+
+    if div_content or closed_job:
         return True
 
     return False
