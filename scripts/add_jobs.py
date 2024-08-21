@@ -154,9 +154,10 @@ roles = [
     "Frontend Developer",
     "Backend Developer",
     "Machine Learning Engineer",
-    "API Developer"
+    "API Developer",
+    "Data Science Engineer",
+    "Software Developer new grad",
     "Software developer intern",
-    "Software intern",
     "Full Stack intern",
     "software summer internship"
     "Software developer Co-op",
