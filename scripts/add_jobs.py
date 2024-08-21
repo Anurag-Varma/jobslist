@@ -155,10 +155,11 @@ roles = [
     "Backend Developer",
     "Machine Learning Engineer",
     "API Developer"
-    "Software Engineer intern",
+    "Software developer intern",
     "Software intern",
     "Full Stack intern",
     "software summer internship"
+    "Software developer Co-op",
 ]
 
 # Get the authentication cookie
