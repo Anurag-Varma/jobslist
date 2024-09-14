@@ -12,7 +12,7 @@ load_dotenv()
 
 def send_post_to_get_cookie():
     try:
-        url = "https://api-v1.jobslist.live/api/users/login"
+        url = os.getenv("REACT_APP_BACKEND_API_URL")+"/api/users/login"
         payload = json.dumps({
             "email": os.getenv("EMAIL"),
             "password": os.getenv("PASSWORD")
@@ -29,7 +29,7 @@ def send_post_to_get_cookie():
 
 def send_post_request_to_add_jobs(job_data, cookie):
     try:
-        url = 'https://api-v1.jobslist.live/api/jobs/addJob'
+        url = os.getenv("REACT_APP_BACKEND_API_URL")+'/api/jobs/addJob'
         headers = {
             'Referer': 'https://www.jobslist.live',
             'Content-Type': 'application/json',
