@@ -149,13 +149,13 @@ def scrape_and_post_jobs(role, cookie):
 
 # List of job roles to scrape
 roles = [
+    "Software Developer",
     "Software Engineer",
     "Full Stack Developer",
     "Frontend Developer",
     "Backend Developer",
-    "Machine Learning Engineer",
     "API Developer",
-    "Data Science Engineer",
+    "Python Developer",
     "Software Developer new grad"
 ]
 
