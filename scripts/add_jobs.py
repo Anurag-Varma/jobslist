@@ -54,7 +54,7 @@ def scrape_and_post_jobs(role, cookie):
             site_name=["linkedin"],
             search_term=role,
             location="United States",
-            results_wanted=100,
+            results_wanted=200,
             hours_old=24 * 1,  # Only Linkedin/Indeed is hour specific, others round up to days old
             country_indeed='USA',  # Only needed for indeed / glassdoor
             description_format='html',
