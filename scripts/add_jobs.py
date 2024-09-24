@@ -71,6 +71,10 @@ def scrape_and_post_jobs(role, cookie):
             if pd.isna(job["logo_photo_url"]) or pd.isna(job["description"]):
                 continue
 
+            # Skip jobs with company name of below list
+            if job["company"] in ["Patterned Learning Career", "HireMeFast LLC", "Phoenix Recruitment", "Jobs via Dice" , "Get It Recruit - Information Technology", "Energy Jobline"]:
+                continue
+
             # Set job location to "United States" if empty
             job_location = job["location"] if not pd.isna(job["location"]) else "United States"
             if job_location == "":
