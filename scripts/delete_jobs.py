@@ -63,7 +63,7 @@ def _get_job_details(job_id: str) -> bool:
 
 def send_post_to_get_cookie():
     try:
-        url = "https://api-v1.jobslist.live/api/users/login"
+        url = os.getenv("REACT_APP_BACKEND_API_URL")+"/api/users/login"
 
         payload = json.dumps({
             "email": os.getenv("EMAIL"),
@@ -85,7 +85,7 @@ cookie = send_post_to_get_cookie()
 
 def get_job_ids():
     try:
-        url = "https://api-v1.jobslist.live/api/jobs/getJobIds"
+        url = os.getenv("REACT_APP_BACKEND_API_URL")+"/api/jobs/getJobIds"
 
         headers = {
             'Referer': 'https://www.jobslist.live',
@@ -102,7 +102,7 @@ def get_job_ids():
 
 def delete_job(job_id):
     try:
-        url = "https://api-v1.jobslist.live/api/jobs/deleteJob"
+        url = os.getenv("REACT_APP_BACKEND_API_URL")+"/api/jobs/deleteJob"
 
         headers = {
             'Referer': 'https://www.jobslist.live',
