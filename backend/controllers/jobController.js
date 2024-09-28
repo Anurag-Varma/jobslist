@@ -104,6 +104,7 @@ const getJobs = async (req, res) => {
                     { job_title: { $not: { $regex: word, $options: 'i' } } },
                     { job_description: { $not: { $regex: word, $options: 'i' } } },
                     { job_company: { $not: { $regex: word, $options: 'i' } } },
+                    { job_company_industry: { $not: { $regex: word, $options: 'i' } } },
                     { job_location: { $not: { $regex: word, $options: 'i' } } }
                 ]
             }));
