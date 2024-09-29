@@ -56,6 +56,7 @@ const getJobs = async (req, res) => {
             job_company_industry = [],
             job_easy_apply = "false",
             // show_jobs_applied = "false",
+            show_jobs_sponsored = "false",
             show_jobs_viewed = "false",
             job_date_posted = "any",
             tags = []
@@ -75,6 +76,10 @@ const getJobs = async (req, res) => {
         if (job_location.length) filter.job_location = { $in: job_location };
         if (job_function.length) filter.job_function = { $in: job_function };
         if (job_company_industry.length) filter.job_company_industry = { $in: job_company_industry };
+
+        if (show_jobs_sponsored === "true") {
+            tags.push("sponser", "w2", "secret", "clearance", "citizen", "green card", "resident", "sponsor", "security", "top secret", "confidential", "security");
+        }
 
         const combinedArray = [
             ...user.deleted,

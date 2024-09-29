@@ -77,6 +77,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
         jobTypes: [],
         easyApply: false,
         appliedJobs: false,
+        sponsorJobs: false,
         viewedJobs: false,
         experienceLevels: [],
         locations: [],
@@ -94,7 +95,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
             }));
         } else if (type === 'checkbox') {
             setFormState(prevState => {
-                if (name === 'easyApply' || name === 'appliedJobs' || name === 'viewedJobs') {
+                if (name === 'easyApply' || name === 'appliedJobs' || name === 'viewedJobs' || name === 'sponsorJobs') {
                     return {
                         ...prevState,
                         [name]: checked
@@ -117,6 +118,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
             jobTypes: [],
             easyApply: false,
             appliedJobs: false,
+            sponsorJobs: false,
             viewedJobs: false,
             experienceLevels: [],
             locations: [],
@@ -149,6 +151,7 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
             "job_easy_apply": formState.easyApply ? "true" : "false",
             "show_jobs_applied": "false",
             // "show_jobs_applied": formState.appliedJobs ? "true" : "false",
+            "show_jobs_sponsored": formState.sponsorJobs ? "true" : "false",
             "show_jobs_viewed": formState.viewedJobs ? "true" : "false",
             "job_date_posted": formState.datePosted,
             "tags": tags
@@ -365,6 +368,26 @@ const ExpandableCard = ({ handleJobSearch, searchText, submitSearch }) => {
                                 </Row>
                             </div>
                             <hr /> */}
+
+                            <div className='sponsorship-div'>
+                                <Row>
+                                    <Col>
+                                        <h5>Sponsorship Available</h5>
+                                    </Col>
+                                    <Col>
+                                        <Form.Check
+                                            type="switch"
+                                            label={formState.sponsorJobs ? "Yes" : "Any"}
+                                            style={{ "marginLeft": "50px" }}
+                                            name="sponsorJobs"
+                                            id='sponsorJobs'
+                                            checked={formState.sponsorJobs}
+                                            onChange={handleChange}
+                                        />
+                                    </Col>
+                                </Row>
+                            </div>
+                            <hr />
 
                             <div className='viewed-jobs-div'>
                                 <Row>
