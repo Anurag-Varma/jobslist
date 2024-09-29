@@ -78,7 +78,7 @@ const getJobs = async (req, res) => {
         if (job_company_industry.length) filter.job_company_industry = { $in: job_company_industry };
 
         if (show_jobs_sponsored === "true") {
-            tags.push("sponser", "w2", "secret", "clearance", "citizen", "green card", "resident", "sponsor", "security", "top secret", "confidential", "security");
+            tags.push("secret", "clearance", "citizen", "green card", "sponsor", "security", "top secret", "confidential", "security");
         }
 
         const combinedArray = [
