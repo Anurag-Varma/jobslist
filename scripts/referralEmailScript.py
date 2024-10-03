@@ -96,9 +96,7 @@ def main():
 
     # Define the email template
     def create_email_template(PERSON_NAME, job_title, JOB_LINK, COMPANY):
-        email_template = emailText
-
-        email_template.format(PERSON_NAME=PERSON_NAME, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
+        email_template = emailText.format(PERSON_NAME=PERSON_NAME, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
         
         return email_template
 
