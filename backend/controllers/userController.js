@@ -187,7 +187,7 @@ const referralEmail = async (req, res) => {
 
         const pythonArgs = [job.job_company, job.job_url_direct];
 
-        const pythonProcess = spawn('python3', ['referralEmailScript.py', ...pythonArgs]);
+        const pythonProcess = spawn('python3', ['/home/ec2-user/jobslist/scripts/referralEmailScript.py', ...pythonArgs]);
 
         pythonProcess.stdout.on('data', (data) => {
             const result = JSON.parse(data.toString()); // Convert the Python output to JSON
@@ -202,9 +202,9 @@ const referralEmail = async (req, res) => {
         });
 
         // Handle the Python process exit
-        pythonProcess.on('close', (code) => {
-            console.log(`Python script exited with code ${code}`);
-        });
+        // pythonProcess.on('close', (code) => {
+        //     console.log(`Python script exited with code ${code}`);
+        // });
 
     } catch (error) {
         res.status(500).json({ error: error.message });

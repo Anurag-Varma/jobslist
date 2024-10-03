@@ -51,11 +51,11 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
     const handleEmailSendButtonClick = async () => {
         try {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
-            const res = await axios.post(`${apiUrl}/api/users/referralEmail`, job, {
+            const res = await axios.post(`${apiUrl}/api/users/referralEmail`, { job }, {
                 withCredentials: true
             });
 
-            console.log(res);
+            console.log(res.data);
 
         } catch (error) {
             if (error.response) {
