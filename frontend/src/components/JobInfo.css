@@ -77,3 +77,26 @@
 .job-info-container .job-description{
     font-size: 13px;
 }
+
+.loading-spinner-overlay {
+    position: fixed; /* Fixed positioning to cover the viewport */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 100vw; /* Full width */
+    height: 100vh; /* Full height */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background color */
+    color: rgb(12, 210, 236);
+    display: flex; /* Use flexbox to center the spinner and text */
+    flex-direction: column; /* Stack the spinner and text vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    z-index: 9999; /* High z-index to appear above other elements */
+}
+
+.loading-text {
+    margin-top: 10px; /* Space between spinner and text */
+    font-size: 1.8rem; /* Increase font size for visibility */
+    font-weight: bold;
+    color: rgb(12, 210, 236);
+    text-align: center; /* Center the text */
+}

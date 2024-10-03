@@ -1,12 +1,13 @@
 import React from 'react'
-import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
+import { Container, Row, Col, Badge, Button, Modal, ListGroup, Spinner } from 'react-bootstrap';
 import './JobInfo.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import useShowToast from '../hooks/useShowToast';
-
+import { useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef }) => {
     var job = defaultJob;
@@ -48,24 +49,33 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         window.open(job.job_url_linkedin, '_blank');
     }
 
+    const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const [jobData, setJobData] = useState({});
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const handleEmailSendButtonClick = async () => {
         try {
+            setLoading(true);
+
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             const res = await axios.post(`${apiUrl}/api/users/referralEmail`, { job }, {
                 withCredentials: true
             });
 
-            console.log(res.data);
+            setJobData(res.data);
+
+            setLoading(false);
+            handleShow();
 
         } catch (error) {
-            if (error.response) {
-                showToast('Error', error.response.data.error, 'error');
-            } else {
-                showToast('Error', error.message, 'error');
-            }
+            setLoading(false);
+            showToast('Error', error.message, 'error');
         }
 
-        // window.open("/", '_blank');
     }
 
     const showToast = useShowToast();
@@ -90,6 +100,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
     }
 
     return (
+
         fetchingJobsLoading ?
             (<></>)
             :
@@ -98,7 +109,81 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                     (<></>)
                     :
                     (
-                        <Container className='job-info-container' ref={jobInfoContainerRef}>
+
+                        < Container className='job-info-container' ref={jobInfoContainerRef} >
+                            {loading ?
+                                (
+                                    <div className="loading-spinner-overlay">
+                                        <Spinner animation="border" role="status" size="lg">
+                                            <span className="visually-hidden"></span>
+                                        </Spinner>
+                                        <div className="loading-text">Fetching referral emails, please wait...</div>
+                                    </div>
+                                ) : (<></>)
+                            }
+
+                            <Modal show={show} onHide={handleClose} size="xl">
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Referral Emails</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    {jobData.error && jobData.error.length > 0 ? (
+                                        <p className="text-danger">Error: {jobData.error.join(', ')}</p>
+                                    ) : (
+                                        // Check if jobData.data exists and is not empty
+                                        jobData.data && jobData.data.length > 0 ? (
+                                            <ListGroup>
+                                                {jobData.data.map((person, index) => (
+                                                    <ListGroup.Item key={index}>
+                                                        <h5>{person.name}</h5>
+                                                        <p><strong>Email: </strong> {person.email}</p>
+                                                        <p>
+                                                            <strong>LinkedIn: </strong>
+                                                            <a
+                                                                href={person.linkedin_profile_url}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                style={{ color: 'blue' }} // Set the link color to blue
+                                                            >
+                                                                {person.linkedin_profile_url}
+                                                            </a>
+                                                        </p>
+                                                        <p><strong>Subject:</strong> {person.subject}</p>
+                                                        <p><strong>Email Content:</strong></p>
+                                                        <pre>{person.email_content}</pre>
+
+                                                        {/* Copy Buttons */}
+                                                        <div style={{ marginTop: '10px' }}>
+                                                            {/* Copy Email Button */}
+                                                            <CopyToClipboard text={person.email} onCopy={() => showToast(`${person.email} copied!`)}>
+                                                                <Button variant="outline-primary" size="sm" style={{ marginRight: '10px' }}>Copy Email</Button>
+                                                            </CopyToClipboard>
+
+                                                            {/* Copy Subject Button */}
+                                                            <CopyToClipboard text={person.subject} onCopy={() => showToast('Subject copied!')}>
+                                                                <Button variant="outline-primary" size="sm" style={{ marginRight: '10px' }}>Copy Subject</Button>
+                                                            </CopyToClipboard>
+
+                                                            {/* Copy Email Content Button */}
+                                                            <CopyToClipboard text={person.email_content} onCopy={() => showToast('Email content copied!')}>
+                                                                <Button variant="outline-success" size="sm" style={{ marginRight: '10px' }}>Copy Email Content</Button>
+                                                            </CopyToClipboard>
+
+                                                        </div>
+                                                    </ListGroup.Item>
+                                                ))}
+                                            </ListGroup>
+
+                                        ) : (
+                                            // If no error and no data
+                                            <p>No referral data available for this company</p>
+                                        )
+                                    )}
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                                </Modal.Footer>
+                            </Modal>
 
                             <Row>
                                 <Col style={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
@@ -189,6 +274,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                         </Container >
                     )
             )
+
     )
 }
 
