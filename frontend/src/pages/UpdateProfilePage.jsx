@@ -103,6 +103,7 @@ export default function UpdateProfilePage() {
                             type="email"
                             value={inputs.email}
                             onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
+                            autoComplete="email"
                         />
                     </FormControl>
                     <FormControl>

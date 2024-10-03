@@ -18,13 +18,6 @@ def main():
     result["error"] = []
     result["data"] = []
     
-    # script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Construct the path to cookies.json
-    # cookies_path = os.path.join(script_dir, 'cookies.json')
-
-    # Load cookies from JSON file
-    # cookies = json.load(open(cookies_path))
     cookies = json.loads(jsonCookies)
 
     # Initialize a cookie jar
@@ -125,8 +118,6 @@ def main():
                     "email_content": email_content,
                     "subject": f"Referral for Software Engineer role at {company}"
                 })
-                
-
 
     # Main function to process LinkedIn profiles
     def process_linkedin_profiles(api, company, job_title, region, job_link, limit=20):
