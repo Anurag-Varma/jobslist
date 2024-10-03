@@ -211,6 +211,7 @@ const referralEmail = async (req, res) => {
 
         // Handle any errors from the Python script
         pythonProcess.stderr.on('data', (data) => {
+            console.error(data.toString());
             res.status(500).json({ error: "Error executing Python script" });
         });
 

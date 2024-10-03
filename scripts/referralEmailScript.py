@@ -5,6 +5,7 @@ from requests.cookies import RequestsCookieJar, create_cookie
 from linkedin_api import Linkedin
 import json
 import requests
+import os
 
 def main():
     # Extract arguments from the command line
@@ -14,9 +15,14 @@ def main():
     result = {}
     result["error"] = []
     result["data"] = []
+    
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to cookies.json
+    cookies_path = os.path.join(script_dir, 'cookies.json')
 
     # Load cookies from JSON file
-    cookies = json.load(open('./cookies.json'))
+    cookies = json.load(open(cookies_path))
 
     # Initialize a cookie jar
     cookie_jar = RequestsCookieJar()
