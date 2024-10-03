@@ -19,6 +19,18 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isPro: {
+        type: Boolean,
+        default: false
+    },
+    emailText: {
+        type: String,
+        default: ""
+    },
+    jsonCookies: {
+        type: String,
+        default: ""
+    },
     viewed: [
         {
             type: mongoose.Schema.Types.ObjectId,

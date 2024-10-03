@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
+import UpdateProfilePage from './pages/UpdateProfilePage';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -47,6 +48,7 @@ function App() {
       <Routes>
         <Route path="/" element={user ? <HomePage user={user} /> : <Navigate to="/auth" />} />
         <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" />} />
+        <Route path="/editProfile" element={user ? <UpdateProfilePage /> : <Navigate to="/auth" />} />
       </Routes>
     </>
   );

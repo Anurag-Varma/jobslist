@@ -6,6 +6,7 @@ import { Search } from 'react-bootstrap-icons';
 
 import { useState, forwardRef } from 'react';
 import { useSetRecoilState } from 'recoil';
+import { Link } from 'react-router-dom';
 import userAtom from '../atoms/userAtom';
 import useShowToast from '../hooks/useShowToast';
 import authScreenAtom from '../atoms/authAtom';
@@ -124,7 +125,8 @@ function Header({ user, setSearchText, setSubmitSearch }) {
                                 <Dropdown.Toggle as={CustomToggle} />
 
                                 <Dropdown.Menu>
-                                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                                    <Dropdown.Item as={Link} to="/editProfile">Edit Profile</Dropdown.Item>
+                                    <Dropdown.Item as={Link} to="/logout" onClick={handleLogout}>Logout</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Nav>

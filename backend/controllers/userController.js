@@ -38,7 +38,9 @@ const signup = async (req, res) => {
                 message: "User created successfully",
                 name: newUser.name,
                 email: newUser.email,
-                isAdmin: newUser.isAdmin
+                isAdmin: newUser.isAdmin,
+                isPro: newUser.isPro,
+                emailText: newUser.emailText
             });
         } else {
             return res.status(400).json({ error: "User not created" });
@@ -67,7 +69,9 @@ const login = async (req, res) => {
             message: "Login successful",
             name: user.name,
             email: user.email,
-            isAdmin: user.isAdmin
+            isAdmin: user.isAdmin,
+            isPro: user.isPro,
+            emailText: newUser.emailText
         });
     }
     catch (error) {
@@ -126,4 +130,41 @@ const updateJobDetails = async (req, res) => {
     }
 }
 
-export { signup, login, logout, updateJobDetails };
+const updateUser = async (req, res) => {
+    try {
+        const { name, email, password, jsonCookie, emailText } = req.body;
+        const userId = req.user._id;
+
+        let user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+        // if (req.params.email !== req.user.email) {
+        //     return res.status(403).json({ error: "You can update only your account" });
+        // }
+
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            user.password = hashedPassword;
+        }
+
+        user.name = name || user.name;
+        user.email = email || user.email;
+        user.jsonCookie = jsonCookie || user.jsonCookie;
+        user.emailText = emailText || user.emailText;
+
+        await user.save();
+
+        user.password = null;
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+
+}
+
+export { signup, login, logout, updateJobDetails, updateUser };
