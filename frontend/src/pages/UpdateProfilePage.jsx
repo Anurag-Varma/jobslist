@@ -22,7 +22,7 @@ export default function UpdateProfilePage() {
         name: user.name,
         email: user.email,
         password: "",
-        jsonCookie: user.jsonCookie,
+        jsonCookies: user.jsonCookies,
         emailText: user.emailText
     });
 
@@ -124,8 +124,8 @@ export default function UpdateProfilePage() {
                                     <Textarea
                                         placeholder="Paste LinkedIn JSON Cookie"
                                         _placeholder={{ color: 'gray.500' }}
-                                        value={inputs.jsonCookie}
-                                        onChange={(e) => setInputs({ ...inputs, jsonCookie: e.target.value })}
+                                        value={inputs.jsonCookies}
+                                        onChange={(e) => setInputs({ ...inputs, jsonCookies: e.target.value })}
                                     />
                                 </FormControl>
                                 <FormControl>

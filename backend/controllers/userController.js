@@ -41,7 +41,7 @@ const signup = async (req, res) => {
                 isAdmin: newUser.isAdmin,
                 isPro: newUser.isPro,
                 emailText: newUser.emailText,
-                jsonCookie: newUser.jsonCookie
+                jsonCookies: newUser.jsonCookies
             });
         } else {
             return res.status(400).json({ error: "User not created" });
@@ -73,7 +73,7 @@ const login = async (req, res) => {
             isAdmin: user.isAdmin,
             isPro: user.isPro,
             emailText: user.emailText,
-            jsonCookie: user.jsonCookie
+            jsonCookies: user.jsonCookies
         });
     }
     catch (error) {
@@ -134,7 +134,7 @@ const updateJobDetails = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        const { name, email, password, jsonCookie, emailText } = req.body;
+        const { name, email, password, jsonCookies, emailText } = req.body;
         const userId = req.user._id;
 
         let user = await User.findById(userId);
@@ -157,11 +157,11 @@ const updateUser = async (req, res) => {
         user.email = email || user.email;
 
         if (user.isPro) {
-            user.jsonCookie = jsonCookie || user.jsonCookie;
+            user.jsonCookies = jsonCookies || user.jsonCookies;
             user.emailText = emailText || user.emailText;
         }
         else {
-            user.jsonCookie = "";
+            user.jsonCookies = "";
             user.emailText = "";
         }
 
