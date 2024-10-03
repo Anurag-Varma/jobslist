@@ -126,7 +126,7 @@ function Header({ user, setSearchText, setSubmitSearch }) {
 
                                 <Dropdown.Menu>
                                     <Dropdown.Item as={Link} to="/editProfile">Edit Profile</Dropdown.Item>
-                                    <Dropdown.Item as={Link} to="/logout" onClick={handleLogout}>Logout</Dropdown.Item>
+                                    <Dropdown.Item as={Link} onClick={handleLogout}>Logout</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Nav>
