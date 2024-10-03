@@ -83,7 +83,7 @@ export default function UpdateProfilePage() {
                     p={6}
                 >
                     <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
-                        User Profile Edit
+                        Edit User Profile
                     </Heading>
                     <FormControl>
                         <FormLabel>Full Name</FormLabel>
@@ -108,31 +108,35 @@ export default function UpdateProfilePage() {
                     <FormControl>
                         <FormLabel>Password</FormLabel>
                         <Input
-                            placeholder="Enter new Password"
+                            placeholder="Enter new password"
                             _placeholder={{ color: 'gray.500' }}
                             type="password"
                             value={inputs.password}
                             onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+                            autoComplete="new-password"
                         />
                     </FormControl>
-
                     {
                         user.isPro && (
                             <>
                                 <FormControl>
                                     <FormLabel>LinkedIn JSON Cookie</FormLabel>
                                     <Textarea
-                                        placeholder="Paste LinkedIn JSON Cookie"
+                                        placeholder="Paste LinkedIn JSON Cookie here.
+( Login into Linkedin on any browser and use Cookie-Editor extension to get the cookies of Linkedin in JSON format. )"
                                         _placeholder={{ color: 'gray.500' }}
+                                        rows="5"
                                         value={inputs.jsonCookies}
                                         onChange={(e) => setInputs({ ...inputs, jsonCookies: e.target.value })}
                                     />
                                 </FormControl>
                                 <FormControl>
-                                    <FormLabel>Email Text</FormLabel>
+                                    <FormLabel>Email Text Template</FormLabel>
                                     <Textarea
-                                        placeholder="Enter Email Text"
+                                        placeholder="Paste Email Text Template here.
+()"
                                         _placeholder={{ color: 'gray.500' }}
+                                        rows="10"
                                         value={inputs.emailText}
                                         onChange={(e) => setInputs({ ...inputs, emailText: e.target.value })}
                                     />

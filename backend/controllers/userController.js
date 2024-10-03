@@ -157,8 +157,8 @@ const updateUser = async (req, res) => {
         user.email = email || user.email;
 
         if (user.isPro) {
-            user.jsonCookies = jsonCookies || user.jsonCookies;
-            user.emailText = emailText || user.emailText;
+            user.jsonCookies = jsonCookies;
+            user.emailText = emailText;
         }
         else {
             user.jsonCookies = "";
