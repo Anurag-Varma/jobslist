@@ -48,10 +48,24 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         window.open(job.job_url_linkedin, '_blank');
     }
 
-    const handleEmailSendButtonClick = () => {
-        handleSetDefaultJob({ ...defaultJob, applied: true });
+    const handleEmailSendButtonClick = async () => {
+        try {
+            const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
+            const res = await axios.post(`${apiUrl}/api/users/referralEmail`, job, {
+                withCredentials: true
+            });
 
-        window.open("/", '_blank');
+            console.log(res);
+
+        } catch (error) {
+            if (error.response) {
+                showToast('Error', error.response.data.error, 'error');
+            } else {
+                showToast('Error', error.message, 'error');
+            }
+        }
+
+        // window.open("/", '_blank');
     }
 
     const showToast = useShowToast();

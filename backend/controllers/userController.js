@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { generateTokenAndSetCookie } from "../utils/helpers/generateTokenAndSetCookie.js"
 
+const { spawn } = require('child_process');
 
 const signup = async (req, res) => {
     try {
@@ -93,7 +94,7 @@ const logout = async (req, res) => {
 
 const updateJobDetails = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = req.user;
         const { jobViewed, jobApplied, jobDeleted } = req.body;
 
         // Check if jobViewed is provided and update the viewed array
@@ -135,9 +136,8 @@ const updateJobDetails = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { name, email, password, jsonCookies, emailText } = req.body;
-        const userId = req.user._id;
 
-        let user = await User.findById(userId);
+        let user = req.user
 
         if (!user) {
             return res.status(400).json({ error: "User not found" });
@@ -176,4 +176,39 @@ const updateUser = async (req, res) => {
 
 }
 
-export { signup, login, logout, updateJobDetails, updateUser };
+const referralEmail = async (req, res) => {
+    try {
+        const { job } = req.body;
+        const user = req.user;
+
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+        const pythonArgs = [job.job_company, job.job_url_direct];
+
+        const pythonProcess = spawn('python3', ['referralEmailScript.py', ...pythonArgs]);
+
+        pythonProcess.stdout.on('data', (data) => {
+            const result = JSON.parse(data.toString()); // Convert the Python output to JSON
+
+            // Send the result back to the client
+            res.status(200).json(result);
+        });
+
+        // Handle any errors from the Python script
+        pythonProcess.stderr.on('data', (data) => {
+            res.status(500).json({ error: "Error executing Python script" });
+        });
+
+        // Handle the Python process exit
+        pythonProcess.on('close', (code) => {
+            console.log(`Python script exited with code ${code}`);
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export { signup, login, logout, updateJobDetails, updateUser, referralEmail };
