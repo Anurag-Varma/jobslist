@@ -187,7 +187,7 @@ const referralEmail = async (req, res) => {
             return res.status(400).json({ error: "User not found" });
         }
 
-        const pythonArgs = [job.job_company, job.job_url_direct];
+        const pythonArgs = [job.job_company, job.job_url_direct, user.jsonCookies, user.emailText];
 
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
@@ -196,9 +196,6 @@ const referralEmail = async (req, res) => {
 
         // Construct the path to the Python script dynamically
         const referralEmailScriptPath = path.join(scriptsDir, 'referralEmailScript.py');
-
-        // Example usage: printing the path
-        console.log(referralEmailScriptPath)
 
         const pythonProcess = spawn('python3.10', [referralEmailScriptPath, ...pythonArgs]);
 
@@ -211,14 +208,9 @@ const referralEmail = async (req, res) => {
 
         // Handle any errors from the Python script
         pythonProcess.stderr.on('data', (data) => {
-            console.error(data.toString());
+            // console.error(data.toString());
             res.status(500).json({ error: "Error executing Python script" });
         });
-
-        // Handle the Python process exit
-        // pythonProcess.on('close', (code) => {
-        //     console.log(`Python script exited with code ${code}`);
-        // });
 
     } catch (error) {
         res.status(500).json({ error: error.message });

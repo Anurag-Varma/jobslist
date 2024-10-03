@@ -11,18 +11,21 @@ def main():
     # Extract arguments from the command line
     company = sys.argv[1]
     job_link = sys.argv[2]
+    jsonCookies = sys.argv[3]
+    emailText = sys.argv[4]
 
     result = {}
     result["error"] = []
     result["data"] = []
     
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Construct the path to cookies.json
-    cookies_path = os.path.join(script_dir, 'cookies.json')
+    # cookies_path = os.path.join(script_dir, 'cookies.json')
 
     # Load cookies from JSON file
-    cookies = json.load(open(cookies_path))
+    # cookies = json.load(open(cookies_path))
+    cookies = json.loads(jsonCookies)
 
     # Initialize a cookie jar
     cookie_jar = RequestsCookieJar()
@@ -92,23 +95,10 @@ def main():
             return None
 
     # Define the email template
-    def create_email_template(name, job_title, job_link, company):
-        email_template = f"""Hi {name},
+    def create_email_template(PERSON_NAME, job_title, JOB_LINK, COMPANY):
+        email_template = emailText
 
-I hope you're doing well. My name is Anurag Varma, a Computer Science grad student at Stony Brook University with a background in software development.
-
-I'm excited about the open Software Engineer role at {company} and believe my skills align well with the position.
-    
-{job_link}
-
-I’d love to connect and discuss how I can contribute to your team.
-
-Any chance we could have a quick chat? A referral or any guidance on how to proceed would be greatly appreciated!
-
-Thank you for your time.
-
-Best,
-Anurag Varma"""
+        email_template.format(PERSON_NAME=PERSON_NAME, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
         
         return email_template
 

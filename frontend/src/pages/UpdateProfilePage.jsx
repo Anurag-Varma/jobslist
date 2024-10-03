@@ -134,7 +134,7 @@ export default function UpdateProfilePage() {
                                     <FormLabel>Email Text Template</FormLabel>
                                     <Textarea
                                         placeholder="Paste Email Text Template here.
-( You can use the following placeholders in your email template: {REFERRING_PERSON_NAME}, {COMPANY}, and {JOB_LINK}. These will be automatically replaced with the relevant details for each job. )"
+( You can use the following placeholders in your email template: {PERSON_NAME}, {COMPANY}, and {JOB_LINK}. These will be automatically replaced with the relevant details for each job. )"
                                         _placeholder={{ color: 'gray.500' }}
                                         rows="12"
                                         value={inputs.emailText}
