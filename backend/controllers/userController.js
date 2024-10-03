@@ -5,6 +5,7 @@ import { generateTokenAndSetCookie } from "../utils/helpers/generateTokenAndSetC
 
 import { spawn } from 'child_process';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const signup = async (req, res) => {
     try {
@@ -188,9 +189,16 @@ const referralEmail = async (req, res) => {
 
         const pythonArgs = [job.job_company, job.job_url_direct];
 
-        const scriptsDir = path.join(import.meta.url, '../../scripts');
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
 
+        const scriptsDir = path.join(__dirname, '../../scripts');
+
+        // Construct the path to the Python script dynamically
         const referralEmailScriptPath = path.join(scriptsDir, 'referralEmailScript.py');
+
+        // Example usage: printing the path
+        console.log(referralEmailScriptPath)
 
         const pythonProcess = spawn('python3.10', [referralEmailScriptPath, ...pythonArgs]);
 
