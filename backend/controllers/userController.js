@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { generateTokenAndSetCookie } from "../utils/helpers/generateTokenAndSetCookie.js"
 
-const { spawn } = require('child_process');
+import { spawn } from 'child_process';
 
 const signup = async (req, res) => {
     try {
