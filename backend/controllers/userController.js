@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { generateTokenAndSetCookie } from "../utils/helpers/generateTokenAndSetCookie.js"
 
 import { spawn } from 'child_process';
+import path from 'path';
 
 const signup = async (req, res) => {
     try {
@@ -187,7 +188,11 @@ const referralEmail = async (req, res) => {
 
         const pythonArgs = [job.job_company, job.job_url_direct];
 
-        const pythonProcess = spawn('python3', ['/home/ec2-user/jobslist/scripts/referralEmailScript.py', ...pythonArgs]);
+        const scriptsDir = path.join(import.meta.url, '../../scripts');
+
+        const referralEmailScriptPath = path.join(scriptsDir, 'referralEmailScript.py');
+
+        const pythonProcess = spawn('python3.10', [referralEmailScriptPath, ...pythonArgs]);
 
         pythonProcess.stdout.on('data', (data) => {
             const result = JSON.parse(data.toString()); // Convert the Python output to JSON
