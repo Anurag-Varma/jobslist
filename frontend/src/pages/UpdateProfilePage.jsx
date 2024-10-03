@@ -42,7 +42,7 @@ export default function UpdateProfilePage() {
                 withCredentials: true
             });
 
-            const data = await res.json();
+            const data = await res.data;
             if (data.error) {
                 showToast('Error', data.error, 'error');
                 return;

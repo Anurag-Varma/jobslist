@@ -40,7 +40,8 @@ const signup = async (req, res) => {
                 email: newUser.email,
                 isAdmin: newUser.isAdmin,
                 isPro: newUser.isPro,
-                emailText: newUser.emailText
+                emailText: newUser.emailText,
+                jsonCookie: newUser.jsonCookie
             });
         } else {
             return res.status(400).json({ error: "User not created" });
@@ -71,7 +72,8 @@ const login = async (req, res) => {
             email: user.email,
             isAdmin: user.isAdmin,
             isPro: user.isPro,
-            emailText: user.emailText
+            emailText: user.emailText,
+            jsonCookie: user.jsonCookie
         });
     }
     catch (error) {
@@ -153,8 +155,15 @@ const updateUser = async (req, res) => {
 
         user.name = name || user.name;
         user.email = email || user.email;
-        user.jsonCookie = jsonCookie || user.jsonCookie;
-        user.emailText = emailText || user.emailText;
+
+        if (user.isPro) {
+            user.jsonCookie = jsonCookie || user.jsonCookie;
+            user.emailText = emailText || user.emailText;
+        }
+        else {
+            user.jsonCookie = "";
+            user.emailText = "";
+        }
 
         await user.save();
 
