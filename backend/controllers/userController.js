@@ -71,7 +71,7 @@ const login = async (req, res) => {
             email: user.email,
             isAdmin: user.isAdmin,
             isPro: user.isPro,
-            emailText: newUser.emailText
+            emailText: user.emailText
         });
     }
     catch (error) {
