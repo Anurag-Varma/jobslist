@@ -9,7 +9,7 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.put("/updateJobDetails", protectRoute, updateJobDetails)
 router.put('/update', protectRoute, updateUser)
-router.get("/referralEmail", protectRoute, referralEmail)
+router.post("/referralEmail", protectRoute, referralEmail)
 
 
 export default router;
