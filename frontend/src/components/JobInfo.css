@@ -58,6 +58,22 @@
     border-color: #0a66c2;
 }
 
+
+.job-info-container .job-info-send-email-button{
+    border-radius: 20px;
+    width: 160px;
+    background-color: #468e06;
+    margin-left: 50px;
+    margin-right: 20px !important;
+    padding: 5px;
+    height: 40px;
+}
+
+.job-info-container .job-info-send-email-button:hover{
+    /* color: #3b7606; */
+    background-color: #3b7606;
+}
+
 .job-info-container .job-description{
     font-size: 13px;
 }

@@ -48,6 +48,12 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         window.open(job.job_url_linkedin, '_blank');
     }
 
+    const handleEmailSendButtonClick = () => {
+        handleSetDefaultJob({ ...defaultJob, applied: true });
+
+        window.open("/", '_blank');
+    }
+
     const showToast = useShowToast();
 
     const handleDelete = async () => {
@@ -134,6 +140,10 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                                                 <span className='me-2'>Apply via LinkedIn</span>
                                                 <i className="bi bi-box-arrow-up-right"></i>
                                             </Button>
+                                            <Button className="btn  job-info-send-email-button" variant="success" onClick={handleEmailSendButtonClick}>
+                                                <span className='me-2'>Referral Emails</span>
+                                                <i className="bi bi-box-arrow-up-right"></i>
+                                            </Button>
                                         </Col>
                                     )
                                     :
@@ -141,6 +151,10 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                                         <Col>
                                             <Button className='job-info-direct-apply-button' variant="primary" onClick={handleJobInfoDirectButtonClick}>
                                                 <span className='me-2'>Easy Apply</span>
+                                                <i className="bi bi-box-arrow-up-right"></i>
+                                            </Button>
+                                            <Button className="btn job-info-send-email-button" variant="success" onClick={handleEmailSendButtonClick}>
+                                                <span className='me-2'>Send Emails</span>
                                                 <i className="bi bi-box-arrow-up-right"></i>
                                             </Button>
                                         </Col>
