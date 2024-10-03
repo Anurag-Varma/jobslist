@@ -123,9 +123,9 @@ export default function UpdateProfilePage() {
                                     <FormLabel>LinkedIn JSON Cookie</FormLabel>
                                     <Textarea
                                         placeholder="Paste LinkedIn JSON Cookie here.
-( Login into Linkedin on any browser and use Cookie-Editor extension to get the cookies of Linkedin in JSON format. )"
+( Login to LinkedIn in any browser and use the Cookie-Editor extension to export cookies in JSON format. )"
                                         _placeholder={{ color: 'gray.500' }}
-                                        rows="5"
+                                        rows="6"
                                         value={inputs.jsonCookies}
                                         onChange={(e) => setInputs({ ...inputs, jsonCookies: e.target.value })}
                                     />
@@ -134,9 +134,9 @@ export default function UpdateProfilePage() {
                                     <FormLabel>Email Text Template</FormLabel>
                                     <Textarea
                                         placeholder="Paste Email Text Template here.
-()"
+( You can use the following placeholders in your email template: {REFERRING_PERSON_NAME}, {COMPANY}, and {JOB_LINK}. These will be automatically replaced with the relevant details for each job. )"
                                         _placeholder={{ color: 'gray.500' }}
-                                        rows="10"
+                                        rows="12"
                                         value={inputs.emailText}
                                         onChange={(e) => setInputs({ ...inputs, emailText: e.target.value })}
                                     />
