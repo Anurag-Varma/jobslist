@@ -10,11 +10,15 @@ const OAuthCallback = () => {
     useEffect(() => {
         const query = new URLSearchParams(location.search);
         const authCode = query.get('code');
-        const userId = 'your-user-id-here';  // Set userId from logged-in user
+
+        console.log(authCode);
 
         if (authCode) {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
-            axios.post(`${apiUrl}/api/users/oauth2callback`, { code: authCode, userId })
+            axios.post(`${apiUrl}/api/users/oauth2callback`, { code: authCode },
+                {
+                    withCredentials: true
+                })
                 .then((response) => {
                     setMessage('Authentication successful! You can close this window.');
                     navigate('/');  // Optionally redirect to another page

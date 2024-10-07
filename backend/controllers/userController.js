@@ -91,6 +91,7 @@ const sendEmail = async (req, res) => {
             res.status(200).send(result);
         }
     } catch (error) {
+        console.error('Error sending email: ', error);
         res.status(500).send({ error: 'Error sending email' });
     }
 };
@@ -110,6 +111,7 @@ const oauth2callback = async (req, res) => {
 
         res.status(200).send('Tokens successfully saved to the database!');
     } catch (error) {
+        console.error('Error exchanging authorization code: ', error);
         res.status(500).send('Failed to exchange authorization code.');
     }
 };
