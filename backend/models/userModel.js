@@ -31,6 +31,10 @@ const userSchema = mongoose.Schema({
         type: String,
         default: ""
     },
+    gmailToken: {
+        type: String,
+        default: ""
+    },
     viewed: [
         {
             type: mongoose.Schema.Types.ObjectId,

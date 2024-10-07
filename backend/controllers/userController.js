@@ -7,6 +7,113 @@ import { spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { google } from "googleapis";
+const OAuth2 = google.auth.OAuth2;
+
+const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
+
+const getOAuth2Client = async (user) => {
+    const credentials = JSON.parse(process.env.GOOGLE_OAUTH_CREDENTIALS);
+    const { client_id, client_secret, redirect_uris } = credentials.installed;
+    const oAuth2Client = new OAuth2(client_id, client_secret, redirect_uris[0]);
+
+    // Fetch the token from the database
+    const token = user.gmailToken;
+
+    if (token) {
+        oAuth2Client.setCredentials(token);
+
+        // If the token is expired or expiring, refresh it
+        if (oAuth2Client.isTokenExpiring()) {
+            console.log('Token is expired or expiring, refreshing...');
+            const refreshedToken = await oAuth2Client.refreshAccessToken();
+            user.gmailToken = refreshedToken.credentials;
+            await user.save();
+            oAuth2Client.setCredentials(refreshedToken.credentials);
+            console.log('Token refreshed and saved to database.');
+        }
+    } else {
+        // No token available, generate an OAuth URL
+        const authUrl = oAuth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: SCOPES,
+        });
+        return { authUrl };  // Return auth URL to frontend
+    }
+
+    return oAuth2Client;
+};
+
+const sendMail = async (user, recipient, subject, body) => {
+    try {
+        const oAuth2Client = await getOAuth2Client(user);
+
+        if (oAuth2Client.authUrl) {
+            // If we need to authenticate, send the auth URL back
+            return { authUrl: oAuth2Client.authUrl };
+        }
+
+        const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
+        const raw = createMail(recipient, subject, body);
+
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            resource: { raw: raw },
+        });
+
+        return { data: response.data };
+    } catch (error) {
+        console.error('Error sending email: ', error);
+        throw error;
+    }
+};
+
+const createMail = (to, subject, messageText) => {
+    const message = [
+        `To: ${to}`,
+        `Subject: ${subject}`,
+        '',
+        messageText,
+    ].join('\n');
+
+    return Buffer.from(message).toString('base64').replace(/\+/g, '-').replace(/\//g, '_');
+};
+
+const sendEmail = async (req, res) => {
+    const { recipient, subject, body } = req.body;
+    const user = req.user;
+    try {
+        const result = await sendMail(user, recipient, subject, body);
+
+        if (result.authUrl) {
+            res.status(200).send({ authUrl: result.authUrl });
+        } else {
+            res.status(200).send(result);
+        }
+    } catch (error) {
+        res.status(500).send({ error: 'Error sending email' });
+    }
+};
+
+const oauth2callback = async (req, res) => {
+    const { code } = req.body;
+    const user = req.user;
+    const oAuth2Client = await getOAuth2Client(user);  // Retrieve client secrets as before
+
+    try {
+        const { tokens } = await oAuth2Client.getToken(code);
+        oAuth2Client.setCredentials(tokens);
+
+        // Save the new tokens to the user's record in the database
+        user.gmailToken = tokens;
+        await user.save();
+
+        res.status(200).send('Tokens successfully saved to the database!');
+    } catch (error) {
+        res.status(500).send('Failed to exchange authorization code.');
+    }
+};
+
 const signup = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -217,4 +324,4 @@ const referralEmail = async (req, res) => {
     }
 }
 
-export { signup, login, logout, updateJobDetails, updateUser, referralEmail };
+export { signup, login, logout, updateJobDetails, updateUser, referralEmail, sendEmail, oauth2callback };

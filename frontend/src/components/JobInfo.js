@@ -8,6 +8,8 @@ import axios from 'axios';
 import useShowToast from '../hooks/useShowToast';
 import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useNavigate } from 'react-router-dom';
+
 
 const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef }) => {
     var job = defaultJob;
@@ -99,6 +101,31 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         }
     }
 
+    const [authUrl, setAuthUrl] = useState(null);
+    const navigate = useNavigate();
+
+    const sendEmail = async (person) => {
+        try {
+            const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
+            const emailData = {
+                recipient: person.email,
+                subject: person.subject,
+                body: person.email_content,
+            }
+            const response = await axios.post(`${apiUrl}/api/users/send-email`, emailData);
+
+            if (response.data.authUrl) {
+                window.open(response.data.authUrl, '_blank');  // Open OAuth URL in a new tab
+                setAuthUrl(response.data.authUrl);  // Optionally set state with auth URL
+            } else {
+                alert('Email sent successfully!');
+            }
+        } catch (error) {
+            console.error('Error sending email:', error);
+            alert('Error sending email');
+        }
+    };
+
     return (
 
         fetchingJobsLoading ?
@@ -155,19 +182,21 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                                                         {/* Copy Buttons */}
                                                         <div style={{ marginTop: '10px' }}>
                                                             {/* Copy Email Button */}
+
+                                                            {/* 
                                                             <CopyToClipboard text={person.email} onCopy={() => showToast(`${person.email} copied!`)}>
                                                                 <Button variant="outline-primary" size="sm" style={{ marginRight: '10px' }}>Copy Email</Button>
                                                             </CopyToClipboard>
 
-                                                            {/* Copy Subject Button */}
                                                             <CopyToClipboard text={person.subject} onCopy={() => showToast('Subject copied!')}>
                                                                 <Button variant="outline-primary" size="sm" style={{ marginRight: '10px' }}>Copy Subject</Button>
                                                             </CopyToClipboard>
 
-                                                            {/* Copy Email Content Button */}
                                                             <CopyToClipboard text={person.email_content} onCopy={() => showToast('Email content copied!')}>
                                                                 <Button variant="outline-success" size="sm" style={{ marginRight: '10px' }}>Copy Email Content</Button>
-                                                            </CopyToClipboard>
+                                                            </CopyToClipboard> 
+                                                            */}
+                                                            <button onClick={() => sendEmail(person)}>Send Email</button>
 
                                                         </div>
                                                     </ListGroup.Item>
