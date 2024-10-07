@@ -101,8 +101,8 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         }
     }
 
-    const [authUrl, setAuthUrl] = useState(null);
-    const navigate = useNavigate();
+    // const [authUrl, setAuthUrl] = useState(null);
+    // const navigate = useNavigate();
 
     const sendEmail = async (person) => {
         try {
@@ -116,7 +116,6 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
 
             if (response.data.authUrl) {
                 window.open(response.data.authUrl, '_blank');  // Open OAuth URL in a new tab
-                setAuthUrl(response.data.authUrl);  // Optionally set state with auth URL
             } else {
                 alert('Email sent successfully!');
             }

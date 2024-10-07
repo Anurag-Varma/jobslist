@@ -7,6 +7,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import userAtom from './atoms/userAtom';
 import authScreenAtom from './atoms/authAtom';
+import OAuthCallback from './pages/OAuthCallback';
 
 
 import Cookies from 'js-cookie';
@@ -49,6 +50,7 @@ function App() {
         <Route path="/" element={user ? <HomePage user={user} /> : <Navigate to="/auth" />} />
         <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" />} />
         <Route path="/editProfile" element={user ? <UpdateProfilePage /> : <Navigate to="/auth" />} />
+        <Route path="/oauth-callback" element={<OAuthCallback />} />
       </Routes>
     </>
   );
