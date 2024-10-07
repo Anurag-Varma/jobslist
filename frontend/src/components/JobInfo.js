@@ -7,8 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import useShowToast from '../hooks/useShowToast';
 import { useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useNavigate } from 'react-router-dom';
+// import { CopyToClipboard } from 'react-copy-to-clipboard';
+// import { useNavigate } from 'react-router-dom';
 
 
 const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef }) => {
@@ -108,11 +108,17 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         try {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             const emailData = {
-                recipient: person.email,
+                recipient: "anuragvarma.penmetsa@stonybrook.edu",
                 subject: person.subject,
                 body: person.email_content,
             }
-            const response = await axios.post(`${apiUrl}/api/users/send-email`, emailData);
+            const response = await axios.post(`${apiUrl}/api/users/send-email`,
+                emailData,
+                {
+                    withCredentials: true
+                }
+            );
+
 
             if (response.data.authUrl) {
                 window.open(response.data.authUrl, '_blank');  // Open OAuth URL in a new tab

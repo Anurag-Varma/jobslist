@@ -14,7 +14,7 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
 
 const getOAuth2Client = async (user) => {
     const credentials = JSON.parse(process.env.GOOGLE_OAUTH_CREDENTIALS);
-    const { client_id, client_secret, redirect_uris } = credentials.installed;
+    const { client_id, client_secret, redirect_uris } = credentials.web;
     const oAuth2Client = new OAuth2(client_id, client_secret, redirect_uris[0]);
 
     // Fetch the token from the database
