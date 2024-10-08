@@ -20,7 +20,7 @@ const getOAuth2Client = async (user) => {
     // Fetch the token from the database
     const token = user.gmailToken;
 
-    if (token) {
+    if (token && Object.keys(token).length > 0) {
         oAuth2Client.setCredentials(token);
 
         // If the token is expired or expiring, refresh it

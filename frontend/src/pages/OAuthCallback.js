@@ -20,6 +20,7 @@ const OAuthCallback = () => {
                     withCredentials: true
                 })
                 .then((response) => {
+                    console.log(response);
                     setMessage('Authentication successful! You can close this window.');
                     navigate('/');  // Optionally redirect to another page
                 })
