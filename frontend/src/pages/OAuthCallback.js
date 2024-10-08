@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const OAuthCallback = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [message, setMessage] = useState('Authorizing...');
 
     useEffect(() => {
@@ -20,9 +19,12 @@ const OAuthCallback = () => {
                     withCredentials: true
                 })
                 .then((response) => {
-                    console.log(response);
                     setMessage('Authentication successful! You can close this window.');
-                    navigate('/');  // Optionally redirect to another page
+                    const closeResult = window.close();
+
+                    if (!closeResult) {
+                        setMessage('Please close this tab manually.');
+                    }
                 })
                 .catch((error) => {
                     console.error('Error exchanging code:', error);
@@ -31,11 +33,11 @@ const OAuthCallback = () => {
         } else {
             setMessage('Authorization code not found.');
         }
-    }, [location, navigate]);
+    }, [location]);
 
     return (
         <div>
-            <h2>{message}</h2>
+            <h3>{message}</h3>
         </div>
     );
 };
