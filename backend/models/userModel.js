@@ -32,8 +32,8 @@ const userSchema = mongoose.Schema({
         default: ""
     },
     gmailToken: {
-        type: String,
-        default: ""
+        type: Object,
+        default: {}
     },
     viewed: [
         {

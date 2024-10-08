@@ -99,7 +99,12 @@ const sendEmail = async (req, res) => {
 const oauth2callback = async (req, res) => {
     const { code } = req.body;
     const user = req.user;
-    const oAuth2Client = await getOAuth2Client(user);  // Retrieve client secrets as before
+
+    const credentials = JSON.parse(process.env.GOOGLE_OAUTH_CREDENTIALS);
+    const { client_id, client_secret, redirect_uris } = credentials.web;
+    const oAuth2Client = new OAuth2(client_id, client_secret, redirect_uris[0]);
+
+    // const oAuth2Client = await getOAuth2Client(user);  // Retrieve client secrets as before
 
     try {
         const { tokens } = await oAuth2Client.getToken(code);
