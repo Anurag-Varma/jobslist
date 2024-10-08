@@ -10,8 +10,6 @@ const OAuthCallback = () => {
         const query = new URLSearchParams(location.search);
         const authCode = query.get('code');
 
-        console.log(authCode);
-
         if (authCode) {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             axios.post(`${apiUrl}/api/users/oauth2callback`, { code: authCode },
@@ -27,7 +25,6 @@ const OAuthCallback = () => {
                     }
                 })
                 .catch((error) => {
-                    console.error('Error exchanging code:', error);
                     setMessage('Authentication failed. Please try again.');
                 });
         } else {

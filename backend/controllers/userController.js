@@ -25,12 +25,10 @@ const getOAuth2Client = async (user) => {
 
         // If the token is expired or expiring, refresh it
         if (oAuth2Client.isTokenExpiring()) {
-            console.log('Token is expired or expiring, refreshing...');
             const refreshedToken = await oAuth2Client.refreshAccessToken();
             user.gmailToken = refreshedToken.credentials;
             await user.save();
             oAuth2Client.setCredentials(refreshedToken.credentials);
-            console.log('Token refreshed and saved to database.');
         }
     } else {
         // No token available, generate an OAuth URL
@@ -63,7 +61,6 @@ const sendMail = async (user, recipient, subject, body) => {
 
         return { data: response.data };
     } catch (error) {
-        console.error('Error sending email: ', error);
         throw error;
     }
 };
@@ -91,7 +88,6 @@ const sendEmail = async (req, res) => {
             res.status(200).send(result);
         }
     } catch (error) {
-        console.error('Error sending email: ', error);
         res.status(500).send({ error: 'Error sending email' });
     }
 };
@@ -116,7 +112,6 @@ const oauth2callback = async (req, res) => {
 
         res.status(200).send('Tokens successfully saved to the database!');
     } catch (error) {
-        console.error('Error exchanging authorization code: ', error);
         res.status(500).send('Failed to exchange authorization code.');
     }
 };
@@ -322,7 +317,6 @@ const referralEmail = async (req, res) => {
 
         // Handle any errors from the Python script
         pythonProcess.stderr.on('data', (data) => {
-            // console.error(data.toString());
             res.status(500).json({ error: "Error executing Python script" });
         });
 

@@ -7,9 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import useShowToast from '../hooks/useShowToast';
 import { useState } from 'react';
-// import { CopyToClipboard } from 'react-copy-to-clipboard';
-// import { useNavigate } from 'react-router-dom';
-
 
 const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef }) => {
     var job = defaultJob;
@@ -101,14 +98,11 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         }
     }
 
-    // const [authUrl, setAuthUrl] = useState(null);
-    // const navigate = useNavigate();
-
     const sendEmail = async (person) => {
         try {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             const emailData = {
-                recipient: "anuragvarma.penmetsa@stonybrook.edu",
+                recipient: person.email,
                 subject: person.subject,
                 body: person.email_content,
             }
@@ -123,11 +117,10 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
             if (response.data.authUrl) {
                 window.open(response.data.authUrl, '_blank');  // Open OAuth URL in a new tab
             } else {
-                alert('Email sent successfully!');
+                showToast('Success', 'Email sent successfully!', 'success');
             }
         } catch (error) {
-            console.error('Error sending email:', error);
-            alert('Error sending email');
+            showToast('Error', error.message, 'error');
         }
     };
 
