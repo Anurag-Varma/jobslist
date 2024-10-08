@@ -98,7 +98,15 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         }
     }
 
-    const sendEmail = async (person) => {
+    const [buttonColors, setButtonColors] = useState(
+        jobData && jobData.data ? Array(jobData.data.length).fill('success') : []
+    );
+
+    const sendEmail = async (person, index) => {
+
+        const updatedColors = [...buttonColors];
+        updatedColors[index] = 'danger';
+        setButtonColors(updatedColors);
         try {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
             const emailData = {
@@ -179,7 +187,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
 
                                                         {/* Copy Buttons */}
                                                         <div style={{ marginTop: '10px' }}>
-                                                            <Button variant="success" size="sm" onClick={() => sendEmail(person)}>Send Email</Button>
+                                                            <Button variant={buttonColors[index]} size="sm" onClick={() => sendEmail(person, index)}>Send Email</Button>
                                                         </div>
                                                     </ListGroup.Item>
                                                 ))}
