@@ -35,6 +35,7 @@ const getOAuth2Client = async (user) => {
         const authUrl = oAuth2Client.generateAuthUrl({
             access_type: 'offline',
             scope: SCOPES,
+            prompt: 'consent'
         });
         return { authUrl };  // Return auth URL to frontend
     }
