@@ -166,7 +166,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                                         jobData.data && jobData.data.length > 0 ? (
                                             <ListGroup>
                                                 {jobData.data.map((person, index) => (
-                                                    <ListGroup.Item key={index}>
+                                                    <ListGroup.Item key={index} className="mb-3 p-3 border border-dark rounded">
                                                         <h5>{person.name}</h5>
                                                         <p><strong>Email: </strong> {person.email}</p>
                                                         <p>
@@ -186,23 +186,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
 
                                                         {/* Copy Buttons */}
                                                         <div style={{ marginTop: '10px' }}>
-                                                            {/* Copy Email Button */}
-
-                                                            {/* 
-                                                            <CopyToClipboard text={person.email} onCopy={() => showToast(`${person.email} copied!`)}>
-                                                                <Button variant="outline-primary" size="sm" style={{ marginRight: '10px' }}>Copy Email</Button>
-                                                            </CopyToClipboard>
-
-                                                            <CopyToClipboard text={person.subject} onCopy={() => showToast('Subject copied!')}>
-                                                                <Button variant="outline-primary" size="sm" style={{ marginRight: '10px' }}>Copy Subject</Button>
-                                                            </CopyToClipboard>
-
-                                                            <CopyToClipboard text={person.email_content} onCopy={() => showToast('Email content copied!')}>
-                                                                <Button variant="outline-success" size="sm" style={{ marginRight: '10px' }}>Copy Email Content</Button>
-                                                            </CopyToClipboard> 
-                                                            */}
-                                                            <button onClick={() => sendEmail(person)}>Send Email</button>
-
+                                                            <Button variant="success" size="sm" onClick={() => sendEmail(person)}>Send Email</Button>
                                                         </div>
                                                     </ListGroup.Item>
                                                 ))}
