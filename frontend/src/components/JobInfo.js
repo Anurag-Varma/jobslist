@@ -67,7 +67,7 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
 
             setJobData(res.data);
 
-            setButtonColors([])
+            setButtonColors(Array(res.data.data.length).fill('success'))
 
             setLoading(false);
             handleShow();
