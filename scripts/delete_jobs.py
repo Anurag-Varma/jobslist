@@ -32,13 +32,31 @@ session = create_session(
 )
 session.headers.update(headers)
 
-def _get_job_details(job_id: str) -> bool:
+def _get_job_details(job_id, error_count, _id) -> bool:
     try:
         response = session.get(
             f"{base_url}/jobs-guest/jobs/api/jobPosting/{job_id}", timeout=5
         )
         if response.status_code == 404:
-            return True
+            if error_count < 3:
+                error_count += 1
+                
+                url = os.getenv("REACT_APP_BACKEND_API_URL")+"/api/jobs/updateJob"
+
+                headers = {
+                    'Referer': 'https://www.jobslist.live',
+                    'Content-Type': 'application/json',
+                    'Cookie': cookie
+                }
+
+                response = requests.request("PUT", url, headers=headers, json={"jobId": _id, "jobData": {"error_count": error_count}})
+
+                if response.status_code == 200:
+                    return False
+                elif response.status_code == 404:
+                    return True
+            else:
+                return True
         response.raise_for_status()
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]}+Failed to get job details for {job_id}: {e}")
@@ -120,7 +138,8 @@ def delete_job(job_id):
 def process_job(job):
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
-        created_at = created_at = datetime.strptime(job["createdAt"], '%Y-%m-%dT%H:%M:%S.%fZ')
+        created_at = datetime.strptime(job["createdAt"], '%Y-%m-%dT%H:%M:%S.%fZ')
+        error_count = job["error_count"]
         
         # Check if the job's createdAt date is more than 7 days old
         if datetime.now() - created_at > timedelta(days=8):
@@ -130,7 +149,7 @@ def process_job(job):
             else:
                 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job (older than 7 days): {job_id}")
         else:
-            if _get_job_details(job_id):
+            if _get_job_details(job_id, error_count, job["_id"]):
                 response = delete_job(job["_id"])
                 if response:
                     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")

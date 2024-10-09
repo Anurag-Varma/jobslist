@@ -32,7 +32,7 @@ const getJob = async (req, res) => {
 const getJobIds = async (req, res) => {
     try {
         var jobs = await Job.find()
-            .select('job_url_linkedin createdAt');
+            .select('job_url_linkedin createdAt error_count');
 
         if (!jobs) {
             return res.status(404).json({ message: "Job not found" });
@@ -209,6 +209,32 @@ const deleteJob = async (req, res) => {
     }
 }
 
+const updateJob = async (req, res) => {
+    try {
+        const user = req.user;
+
+        if (user.isAdmin) {
+            // Update the job using the job ID from the request body, merging existing data with new data
+            const updatedJob = await Job.findByIdAndUpdate(
+                req.body.jobId,   // Job ID
+                { $set: req.body.jobData },  // Update only the fields provided in jobData
+                { new: true }  // Return updated job and run validation checks
+            );
+
+            if (!updatedJob) {
+                return res.status(404).json({ error: "Job not found" });
+            }
+
+            res.status(200).json({ message: "Job updated successfully" });
+        } else {
+            res.status(401).json({ error: "Unauthorized" });
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
 
-export { getJobs, addJob, getJob, deleteJob, getJobIds };
+
+export { getJobs, addJob, getJob, deleteJob, getJobIds, updateJob };

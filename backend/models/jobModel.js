@@ -63,6 +63,10 @@ const jobSchema = mongoose.Schema({
     job_active: {
         type: Boolean,
         default: true
+    },
+    error_count: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true
