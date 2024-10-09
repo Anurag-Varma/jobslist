@@ -139,7 +139,7 @@ def process_job(job):
     try:
         job_id = job["job_url_linkedin"].split('/')[-1]
         created_at = datetime.strptime(job["createdAt"], '%Y-%m-%dT%H:%M:%S.%fZ')
-        error_count = job["error_count"]
+        error_count = job.get("error_count", 0)
         
         # Check if the job's createdAt date is more than 7 days old
         if datetime.now() - created_at > timedelta(days=8):
