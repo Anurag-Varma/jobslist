@@ -149,7 +149,7 @@ def process_job(job):
             else:
                 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job (older than 7 days): {job_id}")
         else:
-            status, error_count=_get_job_details(job_id, error_count, job["_id"]):
+            status, error_count=_get_job_details(job_id, error_count, job["_id"])
             if status:
                 response = delete_job(job["_id"])
                 if response:
