@@ -52,19 +52,19 @@ def _get_job_details(job_id, error_count, _id) -> bool:
                 response = requests.request("PUT", url, headers=headers, json={"jobId": _id, "jobData": {"error_count": error_count}})
 
                 if response.status_code == 200:
-                    return False
+                    return False, error_count
                 elif response.status_code == 404:
-                    return True
+                    return True, error_count
             else:
-                return True
+                return True, error_count
         response.raise_for_status()
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]}+Failed to get job details for {job_id}: {e}")
-        return False
+        return False, error_count
     
     if "linkedin.com/signup" in response.url:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Redirected to signup page for {job_id}")
-        return False
+        return False, error_count
 
     soup = BeautifulSoup(response.text, "html.parser")
 
@@ -149,12 +149,13 @@ def process_job(job):
             else:
                 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job (older than 7 days): {job_id}")
         else:
-            if _get_job_details(job_id, error_count, job["_id"]):
+            status, error_count=_get_job_details(job_id, error_count, job["_id"]):
+            if status:
                 response = delete_job(job["_id"])
                 if response:
                     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Deleted job: {job_id}")
             else:
-                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Not deleted (job might be open): {job_id}")
+                print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Not deleted (job might be open, count {error_count}): {job_id}")
                 
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Failed to delete job {job['job_url_linkedin']}: {e}")
