@@ -75,9 +75,9 @@ def _get_job_details(job_id, error_count, _id) -> bool:
     apply_button = soup.find("button", class_="sign-up-modal__outlet")
 
     if div_content or apply_button  is None:
-        return True
+        return True, error_count
 
-    return False
+    return False, error_count
 
 def send_post_to_get_cookie():
     try:
