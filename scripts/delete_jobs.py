@@ -72,9 +72,10 @@ def _get_job_details(job_id, error_count, _id) -> bool:
         "figure", class_=lambda x: x and "closed-job" in x
     )
 
-    apply_button = soup.find("button", class_="sign-up-modal__outlet")
+    # apply_button = soup.find("button", class_="sign-up-modal__outlet")
 
-    if div_content or apply_button  is None:
+    # if div_content or apply_button  is None:
+    if div_content:
         return True, error_count
 
     return False, error_count
