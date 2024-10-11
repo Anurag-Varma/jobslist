@@ -140,7 +140,8 @@ def scrape_and_post_jobs(role, cookie):
                 "job_company_linkedin_url": job["company_url"],
                 "job_company_logo": job["logo_photo_url"],
                 "job_easy_apply": job_easy_apply,
-                "job_active": "true"
+                "job_active": "true",
+                "error_count": 0
             }
 
             response = send_post_request_to_add_jobs(json.dumps(job_data), cookie)
