@@ -144,7 +144,7 @@ def scrape_and_post_jobs(role, cookie):
             }
 
             response = send_post_request_to_add_jobs(json.dumps(job_data), cookie)
-            job_id = job["job_url_linkedin"].split('/')[-1]
+            job_id = job_data["job_url_linkedin"].split('/')[-1]
             if response and (response.status_code == 200 or response.status_code == 201):
                 print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f')[:-3]} Job {job_id} added: {job['title']}")
             else:
