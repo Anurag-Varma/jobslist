@@ -179,7 +179,8 @@ const addJob = async (req, res) => {
                 job_company_linkedin_url,
                 job_company_logo,
                 job_easy_apply: job_easy_apply === "true",
-                job_active: true
+                job_active: true,
+                error_count: 0
             });
 
             await newJob.save();
