@@ -111,9 +111,26 @@ def main():
         linkedin_profiles = []
         profile_info_list = []
         headers = get_headers()
+        
+        combined_profiles_set = set()
 
-        # Fetch profile data concurrently using ThreadPoolExecutor
-        urn_ids_data = fetch_linkedin_profiles(api, company, job_title, region, limit)
+        # Fetch "Software" and "Senior Software" profiles concurrently
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            future_software = executor.submit(fetch_linkedin_profiles, api, company, "Software", region, limit)
+            future_senior_software = executor.submit(fetch_linkedin_profiles, api, company, "Senior Software", region, limit)
+
+            software_profiles = future_software.result()
+            senior_software_profiles = future_senior_software.result()
+
+            # Add results to the set to avoid duplicates
+            for profile in software_profiles:
+                combined_profiles_set.add(frozenset(profile.items()))
+
+            for profile in senior_software_profiles:
+                combined_profiles_set.add(frozenset(profile.items()))
+
+        # Convert set of profiles back into a list of dictionaries
+        combined_profiles = [dict(profile) for profile in combined_profiles_set]
 
         def fetch_profile_data(data):
             urn_id = data["urn_id"]
@@ -127,7 +144,7 @@ def main():
 
         # Fetch LinkedIn profile details concurrently
         with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = [executor.submit(fetch_profile_data, data) for data in urn_ids_data]
+            futures = [executor.submit(fetch_profile_data, data) for data in combined_profiles]
             for future in as_completed(futures):
                 profile = future.result()
                 if profile:
