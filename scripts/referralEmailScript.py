@@ -1,11 +1,10 @@
-# script.py
 import sys
-import json
-from requests.cookies import RequestsCookieJar, create_cookie
-from linkedin_api import Linkedin
 import json
 import requests
 import os
+from linkedin_api import Linkedin
+from requests.cookies import RequestsCookieJar, create_cookie
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def main():
     # Extract arguments from the command line
@@ -14,10 +13,7 @@ def main():
     jsonCookies = sys.argv[3]
     emailText = sys.argv[4]
 
-    result = {}
-    result["error"] = []
-    result["data"] = []
-    
+    result = {"error": [], "data": []}
     cookies = json.loads(jsonCookies)
 
     # Initialize a cookie jar
@@ -62,13 +58,12 @@ def main():
             'Sec-Fetch-Dest': 'empty'
         }
 
-    # Define the URL of the Apollo API
+    # Define the Apollo API URL
     APOLLO_URL = "https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_search_page"
 
     # Fetch the LinkedIn profiles based on company name and title
     def fetch_linkedin_profiles(api, company, job_title, region, limit=20):
-        urn_ids_data = api.search_people(keyword_company=company, keyword_title=job_title, regions=[region], limit=limit)
-        return urn_ids_data
+        return api.search_people(keyword_company=company, keyword_title=job_title, regions=[region], limit=limit)
 
     # Make the POST request to the Apollo API
     def send_apollo_request(profiles, headers):
@@ -77,40 +72,33 @@ def main():
             "linkedin_people": profiles
         }
         response = requests.post(APOLLO_URL, json=payload, headers=headers)
-
         if response.status_code != 200:
-            result["error"].append(response.text) 
+            result["error"].append(response.text)
             return None
         try:
             return response.json()
         except ValueError:
-            result["error"].append(response.text) 
+            result["error"].append(response.text)
             return None
 
     # Define the email template
     def create_email_template(PERSON_NAME, job_title, JOB_LINK, COMPANY):
-        email_template = emailText.format(PERSON_NAME=PERSON_NAME, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
-        
-        return email_template
+        return emailText.format(PERSON_NAME=PERSON_NAME, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
 
     # Extract and print contact information from Apollo response and generate email
     def extract_and_send_email(data, profile_info_list, job_link, company):
         if not data or 'contacts' not in data:
             return
-
         for i, contact in enumerate(data['contacts']):
             name = contact['name']
             email = contact['email']
             email_status = contact.get('email_status', '')
             public_id = profile_info_list[i]['public_id']
             job_title = profile_info_list[i]['job_title']
-
             linkedin_profile_url = f"https://www.linkedin.com/in/{public_id}"
 
             if email_status == "verified":
-                # Generate the email using the template
                 email_content = create_email_template(name, job_title, job_link, company)
-
                 result["data"].append({
                     "name": name,
                     "email": email,
@@ -119,53 +107,47 @@ def main():
                     "subject": f"Referral for Software Engineer role at {company}"
                 })
 
-    # Main function to process LinkedIn profiles
+    # Process LinkedIn profiles with concurrency
     def process_linkedin_profiles(api, company, job_title, region, job_link, limit=20):
         linkedin_profiles = []
         profile_info_list = []
         headers = get_headers()
 
+        # Fetch profile data concurrently using ThreadPoolExecutor
         urn_ids_data = fetch_linkedin_profiles(api, company, job_title, region, limit)
 
-        for data in urn_ids_data:
+        def fetch_profile_data(data):
             urn_id = data["urn_id"]
             job_title = data["jobtitle"]
             try:
-                # Get the public_id for each urn_id
                 public_id = api.get_profile(urn_id=urn_id)["public_id"]
-
-                # Add profile details for batch processing
-                linkedin_profiles.append({"href": f"https://www.linkedin.com/in/{public_id}"})
-                profile_info_list.append({"public_id": public_id, "job_title": job_title})
-
-                # Process in batches of 10
-                if len(linkedin_profiles) == 10:
-                    response_data = send_apollo_request(linkedin_profiles, headers)
-                    extract_and_send_email(response_data, profile_info_list, job_link, company)
-
-                    # Clear profiles for the next batch
-                    linkedin_profiles.clear()
-                    profile_info_list.clear()
-
+                return {"public_id": public_id, "job_title": job_title}
             except Exception as e:
-                result["error"].append(e.message)
+                result["error"].append(str(e))
+                return None
 
-        # Process remaining profiles if any
-        if linkedin_profiles:
-            response_data = send_apollo_request(linkedin_profiles, headers)
-            extract_and_send_email(response_data, profile_info_list, job_link, company)
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            futures = [executor.submit(fetch_profile_data, data) for data in urn_ids_data]
+            for future in as_completed(futures):
+                profile = future.result()
+                if profile:
+                    linkedin_profiles.append({"href": f"https://www.linkedin.com/in/{profile['public_id']}"})
+                    profile_info_list.append(profile)
 
-    # Function to be called with input parameters (company name, job title, region, and limit)
-    def main_function(api, company, job_title, region,  job_link="", limit=20):
-        process_linkedin_profiles(api, company, job_title, region, job_link,limit)
+        # Process in batches
+        for i in range(0, len(linkedin_profiles), 10):
+            batch_profiles = linkedin_profiles[i:i + 10]
+            batch_profile_info = profile_info_list[i:i + 10]
+            response_data = send_apollo_request(batch_profiles, headers)
+            extract_and_send_email(response_data, batch_profile_info, job_link, company)
 
-    # Example usage
-    # company = "Interclypse"
-    # job_link = "https://dc1prodrecruiting.paylocity.com/Recruiting/Jobs/Details/2764599/Interclypse-Inc"
+    # Main function to call
+    def main_function(api, company, job_title, region, job_link="", limit=20):
+        process_linkedin_profiles(api, company, job_title, region, job_link, limit)
 
     main_function(api, company, "Software", "103644278", job_link, limit=10)
-        
-    # Print the result as JSON (stdout to be captured by Node.js)
+    
+    # Output result as JSON
     print(json.dumps(result))
 
 if __name__ == "__main__":
