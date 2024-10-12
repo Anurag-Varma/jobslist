@@ -134,6 +134,18 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         }
     };
 
+    const sendAllEmails = async (data) => {
+        // Function to wait for a specified amount of time
+        const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // Iterate over each person in the data
+        for (const [index, person] of data.entries()) {
+            await sendEmail(person, index); // Call sendEmail and wait for it to finish
+            await wait(500); // Wait for 1 second (1000 milliseconds)
+        }
+    };
+
+
     return (
 
         fetchingJobsLoading ?
@@ -167,33 +179,40 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
                                     ) : (
                                         // Check if jobData.data exists and is not empty
                                         jobData.data && jobData.data.length > 0 ? (
-                                            <ListGroup>
-                                                {jobData.data.map((person, index) => (
-                                                    <ListGroup.Item key={index} className="mb-3 p-3 border border-dark rounded">
-                                                        <h5>{person.name}</h5>
-                                                        <p><strong>Email: </strong> {person.email}</p>
-                                                        <p>
-                                                            <strong>LinkedIn: </strong>
-                                                            <a
-                                                                href={person.linkedin_profile_url}
-                                                                target="_blank"
-                                                                rel="noreferrer"
-                                                                style={{ color: 'blue' }} // Set the link color to blue
-                                                            >
-                                                                {person.linkedin_profile_url}
-                                                            </a>
-                                                        </p>
-                                                        <p><strong>Subject:</strong> {person.subject}</p>
-                                                        <p><strong>Email Content:</strong></p>
-                                                        <pre>{person.email_content}</pre>
+                                            <>
+                                                <div className="text-center mb-3">
+                                                    <Button variant="primary" size="sm" onClick={() => sendAllEmails(jobData.data)}>
+                                                        Send All Emails
+                                                    </Button>
+                                                </div>
+                                                <ListGroup>
+                                                    {jobData.data.map((person, index) => (
+                                                        <ListGroup.Item key={index} className="mb-3 p-3 border border-dark rounded">
+                                                            <h5>{person.name}</h5>
+                                                            <p><strong>Email: </strong> {person.email}</p>
+                                                            <p>
+                                                                <strong>LinkedIn: </strong>
+                                                                <a
+                                                                    href={person.linkedin_profile_url}
+                                                                    target="_blank"
+                                                                    rel="noreferrer"
+                                                                    style={{ color: 'blue' }} // Set the link color to blue
+                                                                >
+                                                                    {person.linkedin_profile_url}
+                                                                </a>
+                                                            </p>
+                                                            <p><strong>Subject:</strong> {person.subject}</p>
+                                                            <p><strong>Email Content:</strong></p>
+                                                            <pre>{person.email_content}</pre>
 
-                                                        {/* Copy Buttons */}
-                                                        <div style={{ marginTop: '10px' }}>
-                                                            <Button variant={buttonColors[index]} size="sm" onClick={() => sendEmail(person, index)}>Send Email</Button>
-                                                        </div>
-                                                    </ListGroup.Item>
-                                                ))}
-                                            </ListGroup>
+                                                            {/* Copy Buttons */}
+                                                            <div style={{ marginTop: '10px' }}>
+                                                                <Button variant={buttonColors[index]} size="sm" onClick={() => sendEmail(person, index)}>Send Email</Button>
+                                                            </div>
+                                                        </ListGroup.Item>
+                                                    ))}
+                                                </ListGroup>
+                                            </>
 
                                         ) : (
                                             // If no error and no data
