@@ -10,7 +10,6 @@ import { useState, useEffect } from 'react';
 
 const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef, customJob, handleSetCustomJob }) => {
     var job = defaultJob;
-    var custom_job = customJob;
 
     var resultMessage;
     if (job) {
