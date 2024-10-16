@@ -11,6 +11,7 @@ def main():
     job_link = sys.argv[2]
     jsonCookies = sys.argv[3]
     emailText = sys.argv[4]
+    job_title = sys.argv[5]
 
     result = {"error": [], "data": []}
     cookies = json.loads(jsonCookies)
@@ -61,8 +62,8 @@ def main():
     APOLLO_URL = "https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_search_page"
 
     # Fetch LinkedIn profiles based on company and title in bulk
-    def fetch_linkedin_profiles(api, company, job_title, region, limit=20):
-        return api.search_people(keyword_company=company, keyword_title=job_title, regions=[region], limit=limit)
+    def fetch_linkedin_profiles(api, company, search_job_title, region, limit=20):
+        return api.search_people(keyword_company=company, keyword_title=search_job_title, regions=[region], limit=limit)
 
     # Make the POST request to the Apollo API
     def send_apollo_request(profiles, headers):
@@ -81,8 +82,8 @@ def main():
             return None
 
     # Email template generator
-    def create_email_template(PERSON_NAME, job_title, JOB_LINK, COMPANY):
-        return emailText.format(PERSON_NAME=PERSON_NAME, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
+    def create_email_template(PERSON_NAME, JOB_TITLE, JOB_LINK, COMPANY):
+        return emailText.format(PERSON_NAME=PERSON_NAME, JOB_TITLE=JOB_TITLE, JOB_LINK=JOB_LINK, COMPANY=COMPANY)
 
     # Extract and generate emails for contacts from Apollo response
     def extract_and_send_email(data, profile_info_list, job_link, company):
@@ -103,11 +104,11 @@ def main():
                     "email": email,
                     "linkedin_profile_url": linkedin_profile_url,
                     "email_content": email_content,
-                    "subject": f"Referral for Software Engineer role at {company}"
+                    "subject": f"Referral for {job_title} role at {company}"
                 })
 
     # Process LinkedIn profiles with concurrency
-    def process_linkedin_profiles(api, company, job_title, region, job_link, limit=20):
+    def process_linkedin_profiles(api, company, region, job_link, job_title, limit=20):
         linkedin_profiles = []
         profile_info_list = []
         headers = get_headers()
@@ -134,7 +135,6 @@ def main():
 
         def fetch_profile_data(data):
             urn_id = data["urn_id"]
-            job_title = data["jobtitle"]
             try:
                 public_id = api.get_profile(urn_id=urn_id)["public_id"]
                 return {"public_id": public_id, "job_title": job_title}
@@ -168,10 +168,10 @@ def main():
                 future.result()
 
     # Main function to handle the overall workflow
-    def main_function(api, company, job_title, region, job_link="", limit=20):
-        process_linkedin_profiles(api, company, job_title, region, job_link, limit)
+    def main_function(api, company, region, job_link="", job_title="", limit=20):
+        process_linkedin_profiles(api, company, region, job_link, job_title, limit)
 
-    main_function(api, company, "Software", "103644278", job_link, limit=20)
+    main_function(api, company, "103644278", job_link, job_title, limit=20)
 
     # Output result as JSON
     print(json.dumps(result))

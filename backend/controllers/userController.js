@@ -297,7 +297,7 @@ const referralEmail = async (req, res) => {
             return res.status(400).json({ error: "User not found" });
         }
 
-        const pythonArgs = [job.job_company, job.job_url_direct, user.jsonCookies, user.emailText];
+        const pythonArgs = [job.job_company, job.job_url_direct, user.jsonCookies, user.emailText, job.job_title];
 
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
