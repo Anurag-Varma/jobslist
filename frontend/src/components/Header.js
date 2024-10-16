@@ -1,19 +1,21 @@
-import React from 'react';
-import { Navbar, Container, Form, InputGroup, FormControl, Nav, Dropdown } from 'react-bootstrap';
+import React, { useState, forwardRef } from 'react';
+import { Navbar, Container, Form, InputGroup, FormControl, Nav, Dropdown, Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Header.css';
 import { Search } from 'react-bootstrap-icons';
-
-import { useState, forwardRef } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
 import userAtom from '../atoms/userAtom';
 import useShowToast from '../hooks/useShowToast';
 import authScreenAtom from '../atoms/authAtom';
 
-function Header({ user, setSearchText, setSubmitSearch }) {
+function Header({ user, setSearchText, setSubmitSearch, handleSetCustomJob }) {
     const [focus, setfocus] = useState(false);
     const [click, setclick] = useState(false);
+    const [showModal, setShowModal] = useState(false); // For modal visibility
+    const [jobTitle, setJobName] = useState('');
+    const [jobCompany, setJobCompany] = useState('');
+    const [jobLink, setJobLink] = useState('');
 
     const handleFocus = () => {
         setfocus(!focus);
@@ -26,6 +28,7 @@ function Header({ user, setSearchText, setSubmitSearch }) {
     const setUser = useSetRecoilState(userAtom);
     const showToast = useShowToast();
     const setAuthScreenState = useSetRecoilState(authScreenAtom);
+
     const handleLogout = async () => {
         try {
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
@@ -40,15 +43,12 @@ function Header({ user, setSearchText, setSubmitSearch }) {
             if (data.error) {
                 showToast('Error', data.error, 'error');
                 return;
-            }
-            else {
+            } else {
                 localStorage.removeItem('jobs-list');
                 setUser(null);
                 setAuthScreenState('login');
             }
-
-        }
-        catch (error) {
+        } catch (error) {
             showToast('Error', error.message, 'error');
         }
     };
@@ -69,7 +69,6 @@ function Header({ user, setSearchText, setSubmitSearch }) {
         />
     ));
 
-
     const [search, setSearch] = useState('');
 
     const handleChange = (e) => {
@@ -79,7 +78,26 @@ function Header({ user, setSearchText, setSubmitSearch }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setSubmitSearch(search)
+        setSubmitSearch(search);
+    };
+
+    // Modal open/close handlers
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
+
+    // Handle the modal form submission
+    const handleModalSubmit = (e) => {
+        e.preventDefault();
+
+        handleSetCustomJob({ job_title: jobTitle, job_company: jobCompany, job_url_direct: jobLink });
+
+        // Reset form fields
+        setJobName('');
+        setJobCompany('');
+        setJobLink('');
+
+        // Close modal
+        handleCloseModal();
     };
 
     return (
@@ -104,7 +122,6 @@ function Header({ user, setSearchText, setSubmitSearch }) {
                         </InputGroup>
                         <button
                             className={`navbar-search-button ${click ? 'clicked' : ''}`}
-                            // onFocus={handleClick}
                             onMouseDownCapture={() => handleClick(true)}
                             onMouseUpCapture={() => handleClick(false)}
                             type='submit'
@@ -115,11 +132,22 @@ function Header({ user, setSearchText, setSubmitSearch }) {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
+                        <Nav className="me-auto w-100 d-flex justify-content-center">
+                            {/* Centered Add Job Button */}
+                            {
+                                user && user.isPro &&
+                                <Button variant="outline-primary" onClick={handleShowModal}>
+                                    Custom Job Referral
+                                </Button>
+                            }
                         </Nav>
 
-                        <p className="navbar-user-name">{user && user.name}</p>
-
+                        <Nav className="ms-auto d-flex align-items-center">
+                            {/* User name with no wrap, flex-grow to take available space */}
+                            <p className="navbar-user-name mb-2" style={{ whiteSpace: 'nowrap', flexGrow: 1 }}>
+                                {user && user.name}
+                            </p>
+                        </Nav>
                         <Nav>
                             <Dropdown align="end">
                                 <Dropdown.Toggle as={CustomToggle} />
@@ -131,9 +159,58 @@ function Header({ user, setSearchText, setSubmitSearch }) {
                             </Dropdown>
                         </Nav>
                     </Navbar.Collapse>
+
+
                 </Container>
             </Navbar >
             <hr style={{ margin: 0 }} />
+
+            {/* Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Enter Custom Job Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleModalSubmit}>
+                        <Form.Group className="mb-3" controlId="jobTitle">
+                            <Form.Label>Job Title</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter job title"
+                                value={jobTitle}
+                                onChange={(e) => setJobName(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="jobCompany">
+                            <Form.Label>Job Company</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter company name"
+                                value={jobCompany}
+                                onChange={(e) => setJobCompany(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="jobLink">
+                            <Form.Label>Job Link</Form.Label>
+                            <Form.Control
+                                type="url"
+                                placeholder="Enter job link"
+                                value={jobLink}
+                                onChange={(e) => setJobLink(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Button variant="success" type="submit">
+                            Submit
+                        </Button>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </>
     );
 }

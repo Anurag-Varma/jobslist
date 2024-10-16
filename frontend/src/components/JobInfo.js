@@ -6,10 +6,11 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import useShowToast from '../hooks/useShowToast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef }) => {
+const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, totalJobCount, jobInfoContainerRef, customJob, handleSetCustomJob }) => {
     var job = defaultJob;
+    var custom_job = customJob;
 
     var resultMessage;
     if (job) {
@@ -61,7 +62,8 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
             setLoading(true);
 
             const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
-            const res = await axios.post(`${apiUrl}/api/users/referralEmail`, { job }, {
+
+            const res = await axios.post(`${apiUrl}/api/users/referralEmail`, { job: customJob || job }, {
                 withCredentials: true
             });
 
@@ -78,6 +80,13 @@ const JobInfo = ({ user, defaultJob, handleSetDefaultJob, fetchingJobsLoading, t
         }
 
     }
+
+    useEffect(() => {
+        if (customJob) {
+            handleEmailSendButtonClick(); // Call the email function
+            handleSetCustomJob(null); // Reset customJob to null
+        }
+    }, [customJob]);
 
     const showToast = useShowToast();
 

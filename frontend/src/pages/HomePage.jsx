@@ -8,9 +8,14 @@ import { useState, useRef } from 'react';
 
 const HomePage = ({ user }) => {
     const [defaultJob, setDefaultJob] = useState(null)
+    const [customJob, setCustomJob] = useState(null)
 
     const handleSetDefaultJob = (job) => {
         setDefaultJob(job)
+    }
+
+    const handleSetCustomJob = (job) => {
+        setCustomJob(job)
     }
 
     const jobInfoContainerRef = useRef(null);
@@ -37,12 +42,12 @@ const HomePage = ({ user }) => {
 
     return (
         <div>
-            <Header user={user} setSearchText={setSearchText} setSubmitSearch={setSubmitSearch} />
+            <Header user={user} setSearchText={setSearchText} setSubmitSearch={setSubmitSearch} handleSetCustomJob={handleSetCustomJob} />
             <ExpandableCard handleJobSearch={handleJobSearch} searchText={searchText} submitSearch={submitSearch} />
 
             <Container style={{ opacity: fetchingJobsLoading ? 0.7 : 1, maxWidth: "1200px", width: "100%", padding: "0", display: "flex", flexDirection: "row", justifyContent: "center", transition: "opacity 0.5s linear" }}>
                 <JobsList defaultJob={defaultJob} handleSetDefaultJob={handleSetDefaultJob} setTotalJobCount={setTotalJobCount} totalJobCount={totalJobCount} setFetchingJobsLoading={setFetchingJobsLoading} handleMiniJobClickScroll={handleMiniJobClickScroll} searchData={searchData} />
-                <JobInfo user={user} defaultJob={defaultJob} handleSetDefaultJob={handleSetDefaultJob} totalJobCount={totalJobCount} fetchingJobsLoading={fetchingJobsLoading} jobInfoContainerRef={jobInfoContainerRef} />
+                <JobInfo user={user} defaultJob={defaultJob} handleSetDefaultJob={handleSetDefaultJob} totalJobCount={totalJobCount} fetchingJobsLoading={fetchingJobsLoading} jobInfoContainerRef={jobInfoContainerRef} customJob={customJob} handleSetCustomJob={handleSetCustomJob} />
             </Container>
 
         </div>
