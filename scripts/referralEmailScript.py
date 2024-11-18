@@ -260,7 +260,7 @@ def main():
                     result["data"].append({
                         "name": name,
                         "email": email,
-                        "linkedin_profile_url": linkedin_url_list[i],
+                        "linkedin_profile_url": linkedin_url_list[i]['href'],
                         "email_content": email_content,
                         "subject": f"Referral for {job_title} role at {company}"
                     })
