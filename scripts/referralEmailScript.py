@@ -226,8 +226,7 @@ def main():
             # Fetch profiles from Apollo API
             response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=payload, headers=headers)
             if response.status_code != 200:
-                print(f"Error: Status code {response.status_code}")
-                print(response.text)
+                result["error"].append(response.text)
 
             data = response.json()
             persons = data.get("people", [])
