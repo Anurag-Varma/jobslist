@@ -54,7 +54,7 @@ def main():
             'Accept-Language': 'en-US,en;q=0.9',
             'Connection': 'keep-alive',
             'DNT': '1',
-            'Cookie': '_hjSession_3601622=eyJpZCI6IjEyMWEzYjY0LWEzZmYtNDVlYS1hZTRjLWI2ZGViZDM4ZTlhYyIsImMiOjE3MzE5MTE3Njg1OTEsInMiOjAsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxfQ==;ZP_LATEST_LOGIN_PRICING_VARIANT=24Q3_W59_V2;ZP_Pricing_Split_Test_Variant=24Q3_W59_V2;__cf_bm=Dn5LU2iN5erXKG80sHKCnusG9bxD7A48eNJcY.4VfaA-1731911155-1.0.1.1-H.rKPo4y5RLtaNxMQW3XhuQ7zot6danSSKKol.zDYPQSTAfiTZx2Dn1lsQSvyKLeVuXz6XQJiNAjyIjma9l2fQ;_hjSessionUser_3601622=eyJpZCI6IjY1MGVjMmI3LTE4ZGEtNTVkNy1iMDM0LTg1OWZhY2Q3M2UyYSIsImNyZWF0ZWQiOjE3MzE5MTE3Njg1ODksImV4aXN0aW5nIjpmYWxzZX0=;_leadgenie_session=gA2h7fyzmOaBaVrlupIaBC%2FJLpcMjHUa%2BtRiXUdKppq18cjgGnm4hskKabosWel8iZ7dgnlscTbKrg0%2FcGZO0iI6tISjoG0dXBTJcRNfFJxZDxIRur9LVg13esmLbBdTygrJU4KFbCzwaiGqQs1VsQM4TVGhVRq5y9wQTG0dsVx5qUEH6QM9lMvt36OVDwGggmUKpuUQsh%2BRTpyP7ChT%2BBE0snCcWOkwvYB69XTtVUf%2Bj9gzxBsxd04hXMwC6NGJpnhI0bxfNkNoOO0b5iHivij19wITv8ulvXU%3D--Zcy1xBKWCSuxNBeB--sXZkOTEhqTh%2Fa%2BCEoCePAw%3D%3D;remember_token_leadgenie_v2=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklqWTNNMkZsTURaa1pXSTNNekV5TURGaU1UazRNREExTmw5c1pXRmtaMlZ1YVdWamIyOXJhV1ZvWVhOb0lnPT0iLCJleHAiOiIyMDI0LTEyLTE4VDA2OjM3OjA3LjA4NloiLCJwdXIiOiJjb29raWUucmVtZW1iZXJfdG9rZW5fbGVhZGdlbmllX3YyIn19--28ede82a82965a2bc9a30a2b7babe3601acf92ee;X-CSRF-TOKEN=ZhuSaT46pOBJhRHCyHA5Zb7zsClXVAIqoPqjcnygYBBvaye9ZeJyyGR2XemNz9JUtTUlSFzan4dPtAXE2GNfwA',
+            'Cookie': 'ZP_LATEST_LOGIN_PRICING_VARIANT=24Q3_W59_V2;ZP_Pricing_Split_Test_Variant=24Q3_W59_V2;__cf_bm=wzjuCyO58gh0wOODX1at_UYzT6GO02dpmobmUxpf6Ig-1731963288-1.0.1.1-vv2lHzLkKOoSNY5S2Lueh5IB570cBG7XVApCMikbz_uOJ3vJpTVeKwnLnEy5eZ7DjTZrjm5pkREs7Bz6S0S2LA;_hjSessionUser_3601622=eyJpZCI6ImEzYmM2MzQ2LWNhMmYtNWFmNS1iNDA4LTBjYzc2NzE0MGQ0NCIsImNyZWF0ZWQiOjE3MzAwMDYwMTQ0NDIsImV4aXN0aW5nIjp0cnVlfQ==;_leadgenie_session=excMMRTW5BNIPyolF1RK8%2Fr0GHoGo9JnICKFkQSVICwbphnZeibEB4MJqQlsIjTz9dDplhQexDM8cldwydm2uE0HPwZTIgOdxnBTLVNYV3mGN8nYvCZsILDjx0xOI1qVNdNm4M%2Fg2PnxpWNFBnpIIZcHpOHWU%2BxxVouDszmee3DlIXw4ijdZInqcLfs4wYqomNmGjrF93Wa%2BiIa28yZWX2XeUJb5WR3iHoUsHZ%2Fdkk5%2FGJzZ1zRtvcvLV3n1ORbHa1OoyyMWmX1M3zi0diQwr12cAbfQx0s6118%3D--UjPdaC3l3DOdKgx%2B--aNr1ovIIrnIEsrtQ9twqUw%3D%3D;remember_token_leadgenie_v2=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklqWTNNMkZsTURaa1pXSTNNekV5TURGaU1UazRNREExTmw4NVptTTFZalkyT1RKaFlqUmhaR0kxTnpNeE16YzJZVFJrWW1RNE1qYzVNaUk9IiwiZXhwIjoiMjAyNC0xMi0xOFQyMDozODozMi45MDZaIiwicHVyIjoiY29va2llLnJlbWVtYmVyX3Rva2VuX2xlYWRnZW5pZV92MiJ9fQ%3D%3D--0457d3d3206f3b7c4d8319e543ee9f2cb03323d0;X-CSRF-TOKEN=o8ewV8BNfrNvyLOpDqDddK_8vubbaG-A9uzCO0lGnSLItXAiet8zP3l_wkELYWOz1fei-BEq6Fn0XNRZT3JA4g',
             'Sec-Fetch-Site': 'none',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Dest': 'empty',
@@ -76,7 +76,7 @@ def main():
         }
         response = requests.post(APOLLO_URL, json=payload, headers=headers)
         if response.status_code != 200:
-            result["error"].append(response.text)
+            result["error"].append("Inform Anurag to change cookies")
             return None
         try:
             return response.json()
@@ -190,6 +190,9 @@ def main():
         
         try:
             response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
+            if response.status_code != 200:
+                result["error"].append("Inform Anurag to change cookies")
+                return
 
             organization_data=response.json()
 
