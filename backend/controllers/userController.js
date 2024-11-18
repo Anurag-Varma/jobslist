@@ -292,7 +292,7 @@ const referralEmail = async (req, res) => {
     try {
         const { job } = req.body;
         const user = req.user;
-        const job_company_linkedin_url = job.job_company_linkedin_url
+        const job_company_linkedin_url = job.job_company_linkedin_url || "";
 
         if (!user) {
             return res.status(400).json({ error: "User not found" });
