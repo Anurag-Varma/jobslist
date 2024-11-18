@@ -193,7 +193,7 @@ def main():
 
             organization_data=response.json()
 
-            if organization_data["organization"] is None:
+            if organization_data is None or "organization" not in organization_data:
                 return
 
             organization_id=organization_data["organization"]["id"]
