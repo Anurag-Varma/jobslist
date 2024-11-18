@@ -192,6 +192,10 @@ def main():
             response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
 
             organization_data=response.json()
+
+            if organization_data["organization"] is None:
+                return
+
             organization_id=organization_data["organization"]["id"]
             
             roles = [
