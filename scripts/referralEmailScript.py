@@ -5,6 +5,10 @@ from linkedin_api import Linkedin
 from requests.cookies import RequestsCookieJar, create_cookie
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from dotenv import load_dotenv, set_key
+import os
+load_dotenv()
+
 def main():
     # Extract arguments from the command line
     company = sys.argv[1]
@@ -42,7 +46,7 @@ def main():
 
     # Define headers for Apollo API
 
-    def get_headers():
+    def get_headers(apollo_cookies):
         return{
             'extension-version': '8.3.4',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
@@ -54,12 +58,59 @@ def main():
             'Accept-Language': 'en-US,en;q=0.9',
             'Connection': 'keep-alive',
             'DNT': '1',
-            'Cookie': 'ZP_LATEST_LOGIN_PRICING_VARIANT=24Q3_W59_V2;ZP_Pricing_Split_Test_Variant=24Q3_W59_V2;__cf_bm=wzjuCyO58gh0wOODX1at_UYzT6GO02dpmobmUxpf6Ig-1731963288-1.0.1.1-vv2lHzLkKOoSNY5S2Lueh5IB570cBG7XVApCMikbz_uOJ3vJpTVeKwnLnEy5eZ7DjTZrjm5pkREs7Bz6S0S2LA;_hjSessionUser_3601622=eyJpZCI6ImEzYmM2MzQ2LWNhMmYtNWFmNS1iNDA4LTBjYzc2NzE0MGQ0NCIsImNyZWF0ZWQiOjE3MzAwMDYwMTQ0NDIsImV4aXN0aW5nIjp0cnVlfQ==;_leadgenie_session=excMMRTW5BNIPyolF1RK8%2Fr0GHoGo9JnICKFkQSVICwbphnZeibEB4MJqQlsIjTz9dDplhQexDM8cldwydm2uE0HPwZTIgOdxnBTLVNYV3mGN8nYvCZsILDjx0xOI1qVNdNm4M%2Fg2PnxpWNFBnpIIZcHpOHWU%2BxxVouDszmee3DlIXw4ijdZInqcLfs4wYqomNmGjrF93Wa%2BiIa28yZWX2XeUJb5WR3iHoUsHZ%2Fdkk5%2FGJzZ1zRtvcvLV3n1ORbHa1OoyyMWmX1M3zi0diQwr12cAbfQx0s6118%3D--UjPdaC3l3DOdKgx%2B--aNr1ovIIrnIEsrtQ9twqUw%3D%3D;remember_token_leadgenie_v2=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklqWTNNMkZsTURaa1pXSTNNekV5TURGaU1UazRNREExTmw4NVptTTFZalkyT1RKaFlqUmhaR0kxTnpNeE16YzJZVFJrWW1RNE1qYzVNaUk9IiwiZXhwIjoiMjAyNC0xMi0xOFQyMDozODozMi45MDZaIiwicHVyIjoiY29va2llLnJlbWVtYmVyX3Rva2VuX2xlYWRnZW5pZV92MiJ9fQ%3D%3D--0457d3d3206f3b7c4d8319e543ee9f2cb03323d0;X-CSRF-TOKEN=o8ewV8BNfrNvyLOpDqDddK_8vubbaG-A9uzCO0lGnSLItXAiet8zP3l_wkELYWOz1fei-BEq6Fn0XNRZT3JA4g',
+            'Cookie': apollo_cookies,
             'Sec-Fetch-Site': 'none',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Dest': 'empty',
             'Host': 'app.apollo.io'
         }
+    
+    def login_and_get_cookies(email, password):
+        # URL for the request
+        url = "https://app.apollo.io/api/v1/auth/login"
+        
+        # Headers for the request
+        headers = {
+            "sec-ch-ua-platform": "\"Windows\"",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+            "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
+            "DNT": "1",
+            "Content-Type": "application/json",
+            "sec-ch-ua-mobile": "?0",
+            "Accept": "*/*",
+            "Origin": "https://app.apollo.io",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": "https://app.apollo.io/",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "en-US,en;q=0.9"
+        }
+        
+        
+        # JSON payload for the request
+        data = {
+            "email": email,
+            "password": password,
+            "timezone_offset": 300
+        }
+        
+        # Make the POST request
+        response = requests.post(url, headers=headers, json=data)
+        
+        cookies_string = '; '.join([f"{key}={value}" for key, value in response.cookies.items()])
+        
+
+        return cookies_string
+    
+    apollo_email= os.getenv("APOLLO_EMAIL")
+    apollo_password = os.getenv("APOLLO_PASSWORD")
+    apollo_cookies = os.getenv("APOLLO_COOKIES")
+
+    if apollo_cookies is None or apollo_cookies == "":
+        apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
+        set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+
 
     # Define Apollo API URL
     APOLLO_URL = "https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_search_page"
@@ -76,7 +127,9 @@ def main():
         }
         response = requests.post(APOLLO_URL, json=payload, headers=headers)
         if response.status_code != 200:
-            result["error"].append("Inform Anurag to change cookies")
+            apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
+            set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+            result["error"].append("Refresh the page, then try again")
             return None
         try:
             return response.json()
@@ -112,9 +165,10 @@ def main():
 
     # Process LinkedIn profiles with concurrency
     def process_linkedin_profiles(api, company, region, job_link, job_title, limit=20):
+        global apollo_cookies
         linkedin_profiles = []
         profile_info_list = []
-        headers = get_headers()
+        headers = get_headers(apollo_cookies)
         
         combined_profiles_set = set()
 
@@ -171,11 +225,12 @@ def main():
                 future.result()
 
     def fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag):
+        global apollo_cookies
         # Static data and API URLs
         APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
                         
-        headers = get_headers()  
+        headers = get_headers(apollo_cookies)  
         
         payload = {"url": job_company_linkedin_url,
         "html":"""
@@ -191,7 +246,9 @@ def main():
         try:
             response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
             if response.status_code != 200:
-                result["error"].append("Inform Anurag to change cookies")
+                apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
+                set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+                result["error"].append("Refresh the page, then try again")
                 return
 
             organization_data=response.json()
