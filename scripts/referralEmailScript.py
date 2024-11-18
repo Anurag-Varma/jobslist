@@ -170,7 +170,7 @@ def main():
             for future in as_completed(apollo_futures):
                 future.result()
 
-    def fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company):
+    def fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag):
         # Static data and API URLs
         APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
@@ -212,20 +212,35 @@ def main():
                         "Talent Acquisition Leader", "founder", "managing director", "president", "co-founder"        
                     ]
 
-            payload = {
-                "page": str(1),
-                "contact_email_status_v2": ["likely_to_engage", "verified"],
-                "sort_by_field": "[none]",
-                "sort_ascending": "False",
-                "person_locations": ["United States"],
-                "organization_ids": [organization_id],
-                "person_titles": roles,
-                "display_mode": "explorer_mode",
-                "per_page": 25,
-                "num_fetch_result": 1,
-                "context": "people-index-page",
-                "show_suggestions": "false"
-            }
+            if roles_flag:
+                payload = {
+                    "page": str(1),
+                    "contact_email_status_v2": ["likely_to_engage", "verified"],
+                    "sort_by_field": "[none]",
+                    "sort_ascending": "False",
+                    "person_locations": ["United States"],
+                    "organization_ids": [organization_id],
+                    "person_titles": roles,
+                    "display_mode": "explorer_mode",
+                    "per_page": 25,
+                    "num_fetch_result": 1,
+                    "context": "people-index-page",
+                    "show_suggestions": "false"
+                }
+            else:
+                payload = {
+                    "page": str(1),
+                    "contact_email_status_v2": ["likely_to_engage", "verified"],
+                    "sort_by_field": "[none]",
+                    "sort_ascending": "False",
+                    "person_locations": ["United States"],
+                    "organization_ids": [organization_id],
+                    "display_mode": "explorer_mode",
+                    "per_page": 25,
+                    "num_fetch_result": 1,
+                    "context": "people-index-page",
+                    "show_suggestions": "false"
+                }
         
             # Fetch profiles from Apollo API
             response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=payload, headers=headers)
@@ -279,7 +294,10 @@ def main():
     if job_company_linkedin_url == "":
         main_function(api, company, "103644278", job_link, job_title, limit=20)
     else:
-        fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company)
+        fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag=True)
+        
+        if len(result["data"]) == 0 and len(result["error"]) == 0:
+            fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag=False)
 
     # Output result as JSON
     print(json.dumps(result))
