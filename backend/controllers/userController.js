@@ -292,12 +292,17 @@ const referralEmail = async (req, res) => {
     try {
         const { job } = req.body;
         const user = req.user;
+        const job_company_linkedin_url = job.job_company_linkedin_url
 
         if (!user) {
             return res.status(400).json({ error: "User not found" });
         }
 
-        const pythonArgs = [job.job_company, job.job_url_direct, user.jsonCookies, user.emailText, job.job_title];
+        if (!["panuragvarma@gmail.com"].includes(user.email)) {
+            job_company_linkedin_url = ""
+        }
+
+        const pythonArgs = [job.job_company, job.job_url_direct, user.jsonCookies, user.emailText, job.job_title, job_company_linkedin_url];
 
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);

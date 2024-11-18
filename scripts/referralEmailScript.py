@@ -12,6 +12,7 @@ def main():
     jsonCookies = sys.argv[3]
     emailText = sys.argv[4]
     job_title = sys.argv[5]
+    job_company_linkedin_url = sys.argv[6]
 
     result = {"error": [], "data": []}
     cookies = json.loads(jsonCookies)
@@ -40,6 +41,7 @@ def main():
     api = Linkedin("", "", cookies=cookie_jar)
 
     # Define headers for Apollo API
+
     def get_headers():
         return{
             'extension-version': '8.3.4',
@@ -52,10 +54,11 @@ def main():
             'Accept-Language': 'en-US,en;q=0.9',
             'Connection': 'keep-alive',
             'DNT': '1',
-            'Cookie': '_ps_xid_UhXtEvJi_swfz=pxJxqo8rDkzS39;_ps_partner_key_UhXtEvJi=editorialdepartment9381;_ps_xid_UhXtEvJi_aGEK=U2HoUfn4XtrrAC;_gsxidUhXtEvJibUIe=tRSRPQDr3RqkWs;_grsmpkUhXtEvJi=editorialdepartment9381;_gsxidUhXtEvJijSnP=NG0AsHtbBSjFLI;_gsxidUhXtEvJieJXJ=pxJxqo8rDkzS39;_gsxidUhXtEvJipQVg=EE6Fi0hWcxMXHQ;ZP_LATEST_LOGIN_PRICING_VARIANT=24Q3_W59_V2;ZP_Pricing_Split_Test_Variant=24Q3_W59_V2;__cf_bm=jLl8h5abr7WeIiXuojSz8g_RpgmOSfjnLYLbvt9kQ4s-1730164949-1.0.1.1-wchgy4W2S1bCqH28mnsYjuEvsgVpMsEb1CvDGoPZdzZXbQTPjN.s9nrC8by4HX9VlNI3lh0FIopULu23bHJRNg;_gsxidUhXtEvJi01UG=TnudC8JN9AUygR;_gsxidUhXtEvJiXINT=1PNSEJfZrUAcru;_ps_xid_UhXtEvJi_0D7Z=TnudC8JN9AUygR;_ps_xid_UhXtEvJi_9hGB=EE6Fi0hWcxMXHQ;_gsxidUhXtEvJivn1l=U2HoUfn4XtrrAC;_ps_xid_UhXtEvJi_YWoA=NG0AsHtbBSjFLI;_ps_xid_UhXtEvJi_pzo0=tRSRPQDr3RqkWs;_ps_xid_UhXtEvJi_Bmh5=Z8OxobitTIo5LQ;_gsxidUhXtEvJiJfJB=9qYikNrvgNuloy;_gsxidUhXtEvJiWwDK=Z8OxobitTIo5LQ;_hjSessionUser_3601622=eyJpZCI6IjU1ZmNiMTg3LWRiNTAtNWViNS1iYmY3LWM1MTViMGFlN2E3MyIsImNyZWF0ZWQiOjE3Mjc0MTQ2MzY1NDAsImV4aXN0aW5nIjp0cnVlfQ==;_leadgenie_session=4Vf2nH1NAHHJEYocTobIzCSQNhuj2qSc%2FznZOtm8eiV2btdSwwD2s%2BQEgCmZ7MoY4eZNZZ6qqhNpI7lQDTTAJymcNBO7ikKYbpQmcOi4BCPc%2BEXxwqlb3TW%2Fs%2F9k4QPYPCM1LrlVAIDyP0bD7kHl%2FwovZJeZa35oV4gLJ3fcCtV8AqzVsP6bfunRCTEhvcJwK%2BZ%2Bz%2B4tDwl9eCkT3LXOJ%2BPBulM%2BtsZGVgRCJCA4bVKdc0NJzcqc74I3mBLwms9fIS1%2BakaVW8vTMGP4gnfCz4GAlzS3wyK89VA%3D--arf27ugzbcNnFXDR--5TmiSGN%2F22v0ydg34nVKzA%3D%3D;_ps_xid_UhXtEvJi_BYAi=9qYikNrvgNuloy;_ps_xid_UhXtEvJi_fGQh=1PNSEJfZrUAcru;remember_token_leadgenie_v2=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklqWTJaall4WmpGaFpHRTJaVEZpTURFNVlqazNObU16T0Y5c1pXRmtaMlZ1YVdWamIyOXJhV1ZvWVhOb0lnPT0iLCJleHAiOiIyMDI0LTExLTI5VDAxOjMyOjMwLjgxM1oiLCJwdXIiOiJjb29raWUucmVtZW1iZXJfdG9rZW5fbGVhZGdlbmllX3YyIn19--1cadd1ec976945a76d73a3fcf73ec771b7bbcc81;X-CSRF-TOKEN=Q7tnahZRWdV2NGAsdIIvKEcb0N8i4rO1_N6YH2HC5IpI4_taugQcloRAID20tBobaAKhW0zcdP5G7A1t6tmqEQ',
+            'Cookie': 'ZP_LATEST_LOGIN_PRICING_VARIANT=24Q3_W59_V2;ZP_Pricing_Split_Test_Variant=24Q3_W59_V2;__cf_bm=J4NvOSKN8pa8PQJuGb3ZDMLyXOJgGiFGTx12chh_6WQ-1731903229-1.0.1.1-WN5tYmwJgTqq4q9upG1neTE47j9lwEi66VtF8bhXYfqmINqaSszdLwgGsGXHPKWCdFY.iZMDwopANG7r9JruwQ;_leadgenie_session=TOHiyCcBr6zlH31BiTlzl1XqK00Io%2Fon6jLd9bqrJ6%2FlbmWkfZhH7Kmi%2F5jlRmoOz%2FPPmiQUgTZ5EP7LAm9f045xgbmg2i7A5RFklohpVCJzrhDTUM4tSGAAzna25vWeoHVfBI3zmkXAypOv4nXEOcK9xn%2BTi7cnpTO1vdpwegbL8YSCKqByUrd98hly436HOXa637eKWZvH7CMVhyjPRUY7zeDHtK2a1mYp7TvcNrRCA8WK9P6b0raSnNRh%2B955LSt4l5j5TahsJLIpSJ1u1KCW2gdzJp0jks0%3D--oYHnlk%2FMjqzIaSX0--cGREKY8i9mhi91%2BQISAHfw%3D%3D;remember_token_leadgenie_v2=eyJfcmFpbHMiOnsibWVzc2FnZSI6IklqWTNNelUwTmpnNFlqazFZV05tTURGaU1HUXdOakJqWVY5ak9EUTFaVGs0TVRjNE1ETTJaVFV5WmpCa1pqQXpOV1poTVdNeFlUaGlPQ0k9IiwiZXhwIjoiMjAyNC0xMi0xNFQwMzoyOToyNC4wNTFaIiwicHVyIjoiY29va2llLnJlbWVtYmVyX3Rva2VuX2xlYWRnZW5pZV92MiJ9fQ%3D%3D--bc0014d4e7a0119e8d51f7709830e42f1d90c868;X-CSRF-TOKEN=aOgmxXQyHLiCzuSg_8tkuGyDiM_5KplfLs8DgIDhaIphmJMRL-rKkK89qIu6dI-JZ0UdrvKkBPLBgaU2JCJXWg',
             'Sec-Fetch-Site': 'none',
             'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Dest': 'empty'
+            'Sec-Fetch-Dest': 'empty',
+            'Host': 'app.apollo.io'
         }
 
     # Define Apollo API URL
@@ -156,22 +159,124 @@ def main():
             response_data = send_apollo_request(batch_profiles, headers)
             extract_and_send_email(response_data, batch_profile_info, job_link, company)
 
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        with ThreadPoolExecutor(max_workers=4) as executor:
             apollo_futures = []
-            for i in range(0, len(linkedin_profiles), 10):
-                batch_profiles = linkedin_profiles[i:i + 10]
-                batch_profile_info = profile_info_list[i:i + 10]
+            for i in range(0, len(linkedin_profiles), 20):
+                batch_profiles = linkedin_profiles[i:i + 20]
+                batch_profile_info = profile_info_list[i:i + 20]
                 apollo_futures.append(executor.submit(batch_send_apollo, batch_profiles, batch_profile_info))
             
             # Ensure all Apollo requests finish
             for future in as_completed(apollo_futures):
                 future.result()
 
+    def fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company):
+        # Static data and API URLs
+        APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
+        APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
+                        
+        headers = get_headers()  
+        
+        payload = {"url": job_company_linkedin_url,
+        "html":"""
+                <div class=\"org-top-card__primary-content\">
+                    <h1 class=\"ember-view org-top-card-summary__title\"> test </h1>   
+                    <div class=\"org-top-card-summary-info-list\">  	  
+                        test 
+                    </div>
+                </div>""",
+        "language_code":"en"
+        }
+        
+        try:
+            response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
+
+            organization_data=response.json()
+            organization_id=organization_data["organization"]["id"]
+            
+            roles = [
+                        "senior software engineer", "hiring manager", "software engineering manager", "lead software engineer",
+                        "lead software developer", "head of engineering", "software engineer", "software developer", 
+                        "technical recruiter", "senior director", "director of engineering", "director of technology", 
+                        "talent acquisition manager", "Technical Product Manager", "hiring", "talent acquisition", 
+                        "talent acquisition specialist", "human resources manager", "People Operations Manager", 
+                        "Vice President of Technology", "Vice President of Engineering", "Vice President of Product", 
+                        "Chief Technology Officer", "Chief Information Officer", "Chief Product Officer", 
+                        "Senior Director of Software Development", "Principal Software Engineer", "Distinguished Engineer", 
+                        "Lead Software Engineer", "Head of Technology", "Senior Program Manager", 
+                        "talent acquisition partner", "human resources", "talent acquisition team", 
+                        "Talent Acquisition Leader", "founder", "managing director", "president", "co-founder"        
+                    ]
+
+            payload = {
+                "page": str(1),
+                "contact_email_status_v2": ["likely_to_engage", "verified"],
+                "sort_by_field": "[none]",
+                "sort_ascending": "False",
+                "person_locations": ["United States"],
+                "organization_ids": [organization_id],
+                "person_titles": roles,
+                "display_mode": "explorer_mode",
+                "per_page": 25,
+                "num_fetch_result": 1,
+                "context": "people-index-page",
+                "show_suggestions": "false"
+            }
+        
+            # Fetch profiles from Apollo API
+            response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=payload, headers=headers)
+            if response.status_code != 200:
+                print(f"Error: Status code {response.status_code}")
+                print(response.text)
+
+            data = response.json()
+            persons = data.get("people", [])
+            
+            linkedin_url_list=[]
+            for person in persons:
+                linkedin_url = person.get("linkedin_url")
+                linkedin_url_list.append({"href": linkedin_url})
+                
+            data = send_apollo_request(linkedin_url_list, headers)
+            
+            if not data or 'contacts' not in data:
+                return
+            for i, contact in enumerate(data['contacts']):
+                name = contact['first_name']
+                email = contact['email']
+                email_status = contact.get('email_status', '')
+                
+
+                # Only proceed if email is verified and company is allowed
+                if email_status == "verified" :
+
+                    def check_restricted_email(email):
+                        restricted_domains = ['.gov', '.mil', '.edu']
+                        return any(email.strip().lower().endswith(domain) for domain in restricted_domains)
+
+                    if check_restricted_email(email):
+                        continue
+                    
+                    email_content = create_email_template(name, job_title, job_link, company)
+                    result["data"].append({
+                        "name": name,
+                        "email": email,
+                        "linkedin_profile_url": linkedin_url_list[i],
+                        "email_content": email_content,
+                        "subject": f"Referral for {job_title} role at {company}"
+                    })
+
+        except Exception as e:
+            result["error"].append(str(e))
+
     # Main function to handle the overall workflow
     def main_function(api, company, region, job_link="", job_title="", limit=20):
         process_linkedin_profiles(api, company, region, job_link, job_title, limit)
 
-    main_function(api, company, "103644278", job_link, job_title, limit=20)
+    if job_company_linkedin_url == "":
+        main_function(api, company, "103644278", job_link, job_title, limit=20)
+    else:
+        fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company)
 
     # Output result as JSON
     print(json.dumps(result))
