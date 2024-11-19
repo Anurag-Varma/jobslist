@@ -130,6 +130,7 @@ def main():
         if response.status_code != 200:
             apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
             set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+            result["error"].append("Try again")
             return None
         try:
             return response.json()
@@ -248,6 +249,7 @@ def main():
             if response.status_code != 200:
                 apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
                 set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+                result["error"].append("Try again")
                 return
 
             organization_data=response.json()
