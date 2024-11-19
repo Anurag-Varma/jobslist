@@ -44,8 +44,14 @@ def main():
     # Initialize Linkedin API object with cookie jar
     api = Linkedin("", "", cookies=cookie_jar)
 
-    # Define headers for Apollo API
+    test_api = api.get_user_profile()
 
+    if "status" in test_api and test_api["status"] == 401:
+        result["error"].append("Update your Linkedin cookies in profile")
+        print(json.dumps(result))
+        return
+
+    # Define headers for Apollo API
     def get_headers(apollo_cookies):
         return{
             'extension-version': '8.3.4',
