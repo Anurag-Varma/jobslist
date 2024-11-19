@@ -47,10 +47,10 @@ def main():
 
         test_api = api.get_user_profile()
 
-    if "status" in test_api and test_api["status"] == 401:
-        result["error"].append("Update your Linkedin cookies in profile")
-        print(json.dumps(result))
-        return
+        if "status" in test_api and test_api["status"] == 401:
+            result["error"].append("Update your Linkedin cookies in profile")
+            print(json.dumps(result))
+            return
 
     # Define headers for Apollo API
     def get_headers(apollo_cookies):
