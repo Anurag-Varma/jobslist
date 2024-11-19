@@ -167,7 +167,7 @@ def main():
     def process_linkedin_profiles(api, company, region, job_link, job_title, apollo_cookies, limit=20):
         linkedin_profiles = []
         profile_info_list = []
-        headers = get_headers(apollo_cookies)
+        new_headers = get_headers(apollo_cookies)
         
         combined_profiles_set = set()
 
@@ -209,7 +209,7 @@ def main():
 
         # Split into batches and send Apollo requests concurrently
         def batch_send_apollo(batch_profiles, batch_profile_info):
-            response_data = send_apollo_request(batch_profiles, headers)
+            response_data = send_apollo_request(batch_profiles, new_headers)
             extract_and_send_email(response_data, batch_profile_info, job_link, company)
 
         with ThreadPoolExecutor(max_workers=4) as executor:
@@ -347,8 +347,8 @@ def main():
             result["error"].append(str(e))
 
     # Main function to handle the overall workflow
-    def main_function(api, company, region, job_link="", job_title="", limit=20):
-        process_linkedin_profiles(api, company, region, job_link, job_title, limit)
+    def main_function(api, company, region, job_link="", job_title="", apollo_cookies="", limit=20):
+        process_linkedin_profiles(api, company, region, job_link, job_title, apollo_cookies, limit)
 
     if job_company_linkedin_url == "":
         main_function(api, company, "103644278", job_link, job_title, apollo_cookies, limit=20)
