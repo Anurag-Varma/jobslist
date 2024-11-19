@@ -19,29 +19,36 @@ def main():
     job_company_linkedin_url = sys.argv[6]
 
     result = {"error": [], "data": []}
-    cookies = json.loads(jsonCookies)
-
-    # Initialize a cookie jar
-    cookie_jar = RequestsCookieJar()
-
-    # Populate cookie jar with cookies from JSON
-    for cookie_data in cookies:
-        cookie = create_cookie(
-            domain=cookie_data.get("domain"),
-            name=cookie_data.get("name"),
-            value=cookie_data.get("value"),
-            path=cookie_data.get("path", "/"),
-            secure=cookie_data.get("secure", False),
-            expires=cookie_data.get("expirationDate", None),
-            rest={
-                "HttpOnly": cookie_data.get("httpOnly", False),
-                "SameSite": cookie_data.get("sameSite", "unspecified"),
-                "HostOnly": cookie_data.get("hostOnly", False),
-            }
-        )
-        cookie_jar.set_cookie(cookie)
+    
 
     if job_company_linkedin_url == "":
+        if jsonCookies == None or jsonCookies == "":
+            result["error"].append("Add Linkedin cookies in profile")
+            print(json.dumps(result))
+            return
+    
+        cookies = json.loads(jsonCookies)
+    
+        # Initialize a cookie jar
+        cookie_jar = RequestsCookieJar()
+        
+        # Populate cookie jar with cookies from JSON
+        for cookie_data in cookies:
+            cookie = create_cookie(
+                domain=cookie_data.get("domain"),
+                name=cookie_data.get("name"),
+                value=cookie_data.get("value"),
+                path=cookie_data.get("path", "/"),
+                secure=cookie_data.get("secure", False),
+                expires=cookie_data.get("expirationDate", None),
+                rest={
+                    "HttpOnly": cookie_data.get("httpOnly", False),
+                    "SameSite": cookie_data.get("sameSite", "unspecified"),
+                    "HostOnly": cookie_data.get("hostOnly", False),
+                }
+            )
+            cookie_jar.set_cookie(cookie)
+        
         # Initialize Linkedin API object with cookie jar
         api = Linkedin("", "", cookies=cookie_jar)
 
@@ -51,6 +58,7 @@ def main():
             result["error"].append("Update your Linkedin cookies in profile")
             print(json.dumps(result))
             return
+            
 
     # Define headers for Apollo API
     def get_headers(apollo_cookies):
@@ -235,9 +243,8 @@ def main():
         # Static data and API URLs
         APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
-        
                         
-        headers = get_headers(apollo_cookies)  
+        new_headers = get_headers(apollo_cookies)  
         
         
         payload = {"url": job_company_linkedin_url,
@@ -252,7 +259,7 @@ def main():
         }
         
         try:
-            response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
+            response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=new_headers)
             if response.status_code != 200:
                 apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
                 set_key(".env", "APOLLO_COOKIES", apollo_cookies)
