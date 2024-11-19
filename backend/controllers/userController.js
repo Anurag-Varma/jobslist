@@ -298,7 +298,7 @@ const referralEmail = async (req, res) => {
             return res.status(400).json({ error: "User not found" });
         }
 
-        if (!["panuragvarma@gmail.com"].includes(user.email)) {
+        if (!user.isAdmin) {
             job_company_linkedin_url = ""
         }
 

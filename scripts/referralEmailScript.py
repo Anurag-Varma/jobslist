@@ -41,10 +41,11 @@ def main():
         )
         cookie_jar.set_cookie(cookie)
 
-    # Initialize Linkedin API object with cookie jar
-    api = Linkedin("", "", cookies=cookie_jar)
+    if job_company_linkedin_url == "":
+        # Initialize Linkedin API object with cookie jar
+        api = Linkedin("", "", cookies=cookie_jar)
 
-    test_api = api.get_user_profile()
+        test_api = api.get_user_profile()
 
     if "status" in test_api and test_api["status"] == 401:
         result["error"].append("Update your Linkedin cookies in profile")

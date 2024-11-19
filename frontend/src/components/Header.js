@@ -16,6 +16,7 @@ function Header({ user, setSearchText, setSubmitSearch, handleSetCustomJob }) {
     const [jobTitle, setJobName] = useState('');
     const [jobCompany, setJobCompany] = useState('');
     const [jobLink, setJobLink] = useState('');
+    const [jobCompanyLinkedinLink, setJobCompanyLinkedinLink] = useState('');
 
     const handleFocus = () => {
         setfocus(!focus);
@@ -89,12 +90,13 @@ function Header({ user, setSearchText, setSubmitSearch, handleSetCustomJob }) {
     const handleModalSubmit = (e) => {
         e.preventDefault();
 
-        handleSetCustomJob({ job_title: jobTitle, job_company: jobCompany, job_url_direct: jobLink });
+        handleSetCustomJob({ job_title: jobTitle, job_company: jobCompany, job_url_direct: jobLink, job_company_linkedin_url: jobCompanyLinkedinLink });
 
         // Reset form fields
         setJobName('');
         setJobCompany('');
         setJobLink('');
+        setJobCompanyLinkedinLink('');
 
         // Close modal
         handleCloseModal();
@@ -204,6 +206,20 @@ function Header({ user, setSearchText, setSubmitSearch, handleSetCustomJob }) {
                                 required
                             />
                         </Form.Group>
+
+                        {
+                            user && user.isPro && user.isAdmin &&
+                            <Form.Group className="mb-3" controlId="jobCompanyLinkedinLink">
+                                <Form.Label>Company Linkedin Link</Form.Label>
+                                <Form.Control
+                                    type="url"
+                                    placeholder="Enter company linkedin link"
+                                    value={jobCompanyLinkedinLink}
+                                    onChange={(e) => setJobCompanyLinkedinLink(e.target.value)}
+                                    required
+                                />
+                            </Form.Group>
+                        }
 
                         <Button variant="success" type="submit">
                             Submit
