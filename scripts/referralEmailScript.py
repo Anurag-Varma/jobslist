@@ -110,6 +110,7 @@ def main():
     if apollo_cookies is None or apollo_cookies == "":
         apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
         set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+        
 
 
     # Define Apollo API URL
@@ -129,7 +130,6 @@ def main():
         if response.status_code != 200:
             apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
             set_key(".env", "APOLLO_COOKIES", apollo_cookies)
-            result["error"].append("Refresh the page, then try again")
             return None
         try:
             return response.json()
@@ -164,8 +164,7 @@ def main():
                 })
 
     # Process LinkedIn profiles with concurrency
-    def process_linkedin_profiles(api, company, region, job_link, job_title, limit=20):
-        global apollo_cookies
+    def process_linkedin_profiles(api, company, region, job_link, job_title, apollo_cookies, limit=20):
         linkedin_profiles = []
         profile_info_list = []
         headers = get_headers(apollo_cookies)
@@ -224,13 +223,14 @@ def main():
             for future in as_completed(apollo_futures):
                 future.result()
 
-    def fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag):
-        global apollo_cookies
+    def fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, apollo_cookies, roles_flag):
         # Static data and API URLs
         APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
+        
                         
         headers = get_headers(apollo_cookies)  
+        
         
         payload = {"url": job_company_linkedin_url,
         "html":"""
@@ -248,7 +248,6 @@ def main():
             if response.status_code != 200:
                 apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
                 set_key(".env", "APOLLO_COOKIES", apollo_cookies)
-                result["error"].append("Refresh the page, then try again")
                 return
 
             organization_data=response.json()
@@ -352,12 +351,12 @@ def main():
         process_linkedin_profiles(api, company, region, job_link, job_title, limit)
 
     if job_company_linkedin_url == "":
-        main_function(api, company, "103644278", job_link, job_title, limit=20)
+        main_function(api, company, "103644278", job_link, job_title, apollo_cookies, limit=20)
     else:
-        fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag=True)
+        fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, apollo_cookies, roles_flag=True)
         
         if len(result["data"]) == 0 and len(result["error"]) == 0:
-            fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, roles_flag=False)
+            fetch_profiles_and_add_to_list( job_company_linkedin_url, job_title, job_link, company, apollo_cookies, roles_flag=False)
 
     # Output result as JSON
     print(json.dumps(result))
