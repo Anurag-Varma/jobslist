@@ -244,7 +244,7 @@ def main():
         APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
                         
-        new_headers = get_headers(apollo_cookies)  
+        headers = get_headers(apollo_cookies)  
         
         
         payload = {"url": job_company_linkedin_url,
@@ -259,7 +259,7 @@ def main():
         }
         
         try:
-            response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=new_headers)
+            response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
             if response.status_code != 200:
                 apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
                 set_key(".env", "APOLLO_COOKIES", apollo_cookies)
