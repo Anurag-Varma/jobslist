@@ -54,7 +54,7 @@ def scrape_and_post_jobs(role, cookie):
             site_name=["linkedin"],
             search_term=role,
             location="United States",
-            results_wanted=200,
+            results_wanted=100,
             hours_old=24 * 1,  # Only Linkedin/Indeed is hour specific, others round up to days old
             country_indeed='USA',  # Only needed for indeed / glassdoor
             description_format='html',
@@ -68,7 +68,7 @@ def scrape_and_post_jobs(role, cookie):
     for index, job in jobs.iterrows():
         try:
             # Skip jobs with empty logo_photo_url or description
-            if pd.isna(job["logo_photo_url"]) or pd.isna(job["description"]):
+            if pd.isna(job["description"]):
                 continue
 
             # Skip jobs with company name of below list
@@ -94,7 +94,7 @@ def scrape_and_post_jobs(role, cookie):
                 date_posted = str(today.strftime('%m/%d/%Y'))
 
             # Set job level to "others" if "not applicable"
-            job_level = job["job_level"] if job["job_level"] != "not applicable" else "Others"
+            job_level = job["job_level"] if "job_level" in job and job["job_level"] != "not applicable" else "Others"
 
             if job_level == "internship":
                 job_level = "Internship"
@@ -108,6 +108,8 @@ def scrape_and_post_jobs(role, cookie):
                 job_level = "Director"
             elif job_level == "executive":
                 job_level = "Executive"
+            else:
+                job_level = "Others"
 
             job_type = job["job_type"]
             if job_type == "fulltime":
@@ -134,11 +136,11 @@ def scrape_and_post_jobs(role, cookie):
                 "job_type": job_type,
                 "job_date_posted": date_posted,
                 "job_experience_level": job_level,
-                "job_function": job["job_function"],
+                "job_function": job["job_function"] if "job_function" in job else "Others",
                 "job_company_industry": job["company_industry"],
                 "job_description": job["description"],
                 "job_company_linkedin_url": job["company_url"],
-                "job_company_logo": job["logo_photo_url"],
+                "job_company_logo": job["logo_photo_url"] if "logo_photo_url" in job else "https://cdn-icons-png.flaticon.com/512/149/149395.png",
                 "job_easy_apply": job_easy_apply,
                 "job_active": "true",
                 "error_count": 0
