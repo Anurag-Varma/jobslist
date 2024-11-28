@@ -140,7 +140,7 @@ def scrape_and_post_jobs(role, cookie):
                 "job_company_industry": job["company_industry"],
                 "job_description": job["description"],
                 "job_company_linkedin_url": job["company_url"],
-                "job_company_logo": job["logo_photo_url"] if "logo_photo_url" in job else "https://cdn-icons-png.flaticon.com/512/149/149395.png",
+                "job_company_logo": job["company_logo"] if "company_logo" in job else "https://cdn-icons-png.flaticon.com/512/149/149395.png",
                 "job_easy_apply": job_easy_apply,
                 "job_active": "true",
                 "error_count": 0
