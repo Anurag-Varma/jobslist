@@ -347,7 +347,7 @@ def main():
                         restricted_domains = ['.gov', '.mil', '.edu']
                         return any(email.strip().lower().endswith(domain) for domain in restricted_domains)
 
-                    if check_restricted_email(email):
+                    if email and check_restricted_email(email):
                         continue
                     
                     email_content = create_email_template(name, job_title, job_link, company)
