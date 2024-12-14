@@ -61,7 +61,7 @@ def main():
             
 
     # Define headers for Apollo API
-    def get_headers(apollo_cookies):
+    def get_headers(cookies):
         return{
             'extension-version': '8.3.4',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
@@ -73,7 +73,7 @@ def main():
             'Accept-Language': 'en-US,en;q=0.9',
             'Connection': 'keep-alive',
             'DNT': '1',
-            'Cookie': apollo_cookies,
+            'Cookie': cookies,
             'Sec-Fetch-Site': 'none',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Dest': 'empty',
@@ -121,12 +121,19 @@ def main():
     apollo_email= os.getenv("APOLLO_EMAIL")
     apollo_password = os.getenv("APOLLO_PASSWORD")
     apollo_cookies = os.getenv("APOLLO_COOKIES")
-
+    
+    apollo_email_save= os.getenv("APOLLO_EMAIL_SAVE")
+    apollo_password_save = os.getenv("APOLLO_PASSWORD_SAVE")
+    apollo_cookies_save = os.getenv("APOLLO_COOKIES_SAVE")
+        
     if apollo_cookies is None or apollo_cookies == "":
         apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
         set_key(".env", "APOLLO_COOKIES", apollo_cookies)
         
-
+        
+    if apollo_cookies_save is None or apollo_cookies_save == "":
+        apollo_cookies_save = login_and_get_cookies(apollo_email_save, apollo_password_save)
+        set_key(".env", "APOLLO_COOKIES_SAVE", apollo_cookies_save)
 
     # Define Apollo API URL
     APOLLO_URL = "https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_search_page"
@@ -163,13 +170,31 @@ def main():
             return
         for i, contact in enumerate(data['contacts']):
             name = contact['name']
-            email = contact['email']
             email_status = contact.get('email_status', '')
             public_id = profile_info_list[i]['public_id']
             job_title = profile_info_list[i]['job_title']
             linkedin_profile_url = f"https://www.linkedin.com/in/{public_id}"
 
             if email_status == "verified":
+                info_to_send = {
+                        "first_name": contact["first_name"], 
+                    "last_name": contact["last_name"], "name": contact["name"], 
+                    "linkedin_url": linkedin_url_list[i]['href'], "person_id": contact["person_id"], 
+                    "source": "chrome_extension_linkedin", "organization_id": contact["organization_id"], 
+                    "email_status": "verified", "email_source": "crm_csv", 
+                    "updated_email_true_status": True
+                }
+                    
+                try:
+                    save_headers=get_headers(apollo_cookies_save)  
+                    APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/contacts"
+                    save_response = requests.post(APOLLO_URL_ADD_TO_LIST, json=info_to_send, headers=save_headers)
+                    saved_contact = save_response.json().get('contact', {})
+                except requests.RequestException as e:
+                    continue
+                    
+                email=saved_contact["email"]
+
                 email_content = create_email_template(name, job_title, job_link, company)
                 result["data"].append({
                     "name": name,
@@ -183,7 +208,7 @@ def main():
     def process_linkedin_profiles(api, company, region, job_link, job_title, apollo_cookies, limit=20):
         linkedin_profiles = []
         profile_info_list = []
-        new_headers = get_headers(apollo_cookies)
+        new_headers = get_headers(apollo_cookies)   
         
         combined_profiles_set = set()
 
@@ -245,7 +270,7 @@ def main():
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
                         
         headers = get_headers(apollo_cookies)  
-        
+        save_headers=get_headers(apollo_cookies_save)        
         
         payload = {"url": job_company_linkedin_url,
         "html":"""
@@ -336,12 +361,27 @@ def main():
                 return
             for i, contact in enumerate(data['contacts']):
                 name = contact['first_name']
-                email = contact['email']
                 email_status = contact.get('email_status', '')
-                
 
                 # Only proceed if email is verified and company is allowed
                 if email_status == "verified" :
+                    info_to_send = {
+                             "first_name": contact["first_name"], 
+                            "last_name": contact["last_name"], "name": contact["name"], 
+                            "linkedin_url": linkedin_url_list[i]['href'], "person_id": contact["person_id"], 
+                            "source": "chrome_extension_linkedin", "organization_id": contact["organization_id"], 
+                            "email_status": "verified", "email_source": "crm_csv", 
+                            "updated_email_true_status": True
+                        }
+                    
+                    try:
+                        APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/contacts"
+                        save_response = requests.post(APOLLO_URL_ADD_TO_LIST, json=info_to_send, headers=save_headers)
+                        saved_contact = save_response.json().get('contact', {})
+                    except requests.RequestException as e:
+                        continue
+                        
+                    email=saved_contact["email"]
 
                     def check_restricted_email(email):
                         restricted_domains = ['.gov', '.mil', '.edu']
