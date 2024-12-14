@@ -179,7 +179,7 @@ def main():
                 info_to_send = {
                         "first_name": contact["first_name"], 
                     "last_name": contact["last_name"], "name": contact["name"], 
-                    "linkedin_url": linkedin_url_list[i]['href'], "person_id": contact["person_id"], 
+                    "linkedin_url": linkedin_profile_url, "person_id": contact["person_id"], 
                     "source": "chrome_extension_linkedin", "organization_id": contact["organization_id"], 
                     "email_status": "verified", "email_source": "crm_csv", 
                     "updated_email_true_status": True
