@@ -72,7 +72,7 @@ def scrape_and_post_jobs(role, cookie):
                 continue
 
             # Skip jobs with company name of below list
-            if job["company"] in ["Patterned Learning Career", "HireMeFast LLC", "Phoenix Recruitment", "Jobs via Dice" , "Get It Recruit - Information Technology", "Energy Jobline", "ClickJobs.io"]:
+            if job["company"] in ["Patterned Learning Career", "HireMeFast LLC", "Phoenix Recruitment", "Jobs via Dice" , "Get It Recruit - Information Technology", "Energy Jobline", "ClickJobs.io", "SynergisticIT", "Get It - Professional Services", "Tata Consultancy Services"]:
                 continue
 
             # Set job location to "United States" if empty
