@@ -177,19 +177,33 @@ def main():
 
             if email_status == "verified":
                 info_to_send = {
-                        "first_name": contact["first_name"], 
-                    "last_name": contact["last_name"], "name": contact["name"], 
-                    "linkedin_url": linkedin_profile_url, "person_id": contact["person_id"], 
-                    "source": "chrome_extension_linkedin", "organization_id": contact["organization_id"], 
-                    "email_status": "verified", "email_source": "crm_csv", 
-                    "updated_email_true_status": True
-                }
+                          "contacts":[
+                              {
+                                  "organization_id":contact["organization_id"],
+                                  "name":contact["name"],
+                                  "person_id":contact["person_id"],
+                                  "headline":"",
+                                  "id":contact["id"],
+                                  "linkedin_url":linkedin_url_list[i]["href"],
+                                  "organization_name":"",
+                                  "present_raw_address":contact["present_raw_address"],
+                                  "title":""
+                              }
+                          ],
+                          "label_names":[],
+                          "needs_direct_dial":False,
+                          "analytics_context":"LinkedIn: Bulk View | Overlay | LinkedIn Regular"      
+                    }
                     
                 try:
                     save_headers=get_headers(apollo_cookies_save)  
-                    APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/contacts"
+                    APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/linkedin_chrome_extension/bulk_prospect_search_page"
                     save_response = requests.post(APOLLO_URL_ADD_TO_LIST, json=info_to_send, headers=save_headers)
-                    saved_contact = save_response.json().get('contact', {})
+                    saved_contact = save_response.json().get('contacts', {})
+                    if len(saved_contact)>0:
+                        saved_contact=saved_contact[0]
+                    else:
+                        continue
                 except requests.RequestException as e:
                     continue
                     
@@ -365,19 +379,34 @@ def main():
 
                 # Only proceed if email is verified and company is allowed
                 if email_status == "verified" :
+                   
                     info_to_send = {
-                             "first_name": contact["first_name"], 
-                            "last_name": contact["last_name"], "name": contact["name"], 
-                            "linkedin_url": linkedin_url_list[i]['href'], "person_id": contact["person_id"], 
-                            "source": "chrome_extension_linkedin", "organization_id": contact["organization_id"], 
-                            "email_status": "verified", "email_source": "crm_csv", 
-                            "updated_email_true_status": True
-                        }
+                          "contacts":[
+                              {
+                                  "organization_id":contact["organization_id"],
+                                  "name":contact["name"],
+                                  "person_id":contact["person_id"],
+                                  "headline":"",
+                                  "id":contact["id"],
+                                  "linkedin_url":linkedin_url_list[i]["href"],
+                                  "organization_name":"",
+                                  "present_raw_address":contact["present_raw_address"],
+                                  "title":""
+                              }
+                          ],
+                          "label_names":[],
+                          "needs_direct_dial":False,
+                          "analytics_context":"LinkedIn: Bulk View | Overlay | LinkedIn Regular"      
+                    }
                     
                     try:
-                        APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/contacts"
+                        APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/linkedin_chrome_extension/bulk_prospect_search_page"
                         save_response = requests.post(APOLLO_URL_ADD_TO_LIST, json=info_to_send, headers=save_headers)
-                        saved_contact = save_response.json().get('contact', {})
+                        saved_contact = save_response.json().get('contacts', {})
+                        if len(saved_contact)>0:
+                            saved_contact=saved_contact[0]
+                        else:
+                            continue
                     except requests.RequestException as e:
                         continue
                         
