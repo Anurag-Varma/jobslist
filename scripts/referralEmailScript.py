@@ -282,18 +282,22 @@ def main():
         # Static data and API URLs
         APOLLO_GET_ORGANIZATION_ID ="https://app.apollo.io/api/v1/linkedin_chrome_extension/parse_company_page"
         APOLLO_URL_GET_ALL_PROFILES = "https://app.apollo.io/api/v1/mixed_people/search"
-                        
+
         headers = get_headers(apollo_cookies)  
         save_headers=get_headers(apollo_cookies_save)        
         
         payload = {"url": job_company_linkedin_url,
-        "html":"""
+        "html":
+                """
+                <b>
                 <div class=\"org-top-card__primary-content\">
-                    <h1 class=\"ember-view org-top-card-summary__title\"> test </h1>   
-                    <div class=\"org-top-card-summary-info-list\">  	  
-                        test 
-                    </div>
-                </div>""",
+                  <h1 class=\"ember-view org-top-card-summary__title\"> """+company+""" </h1>
+                  <div class=\"org-top-card-summary-info-list\">
+                    <div class=\"org-top-card-summary-info-list__info-item\"> Software Development </div>
+                  </div>
+                  </div>
+                </b>
+                """,
         "language_code":"en"
         }
         
@@ -363,7 +367,7 @@ def main():
 
             data = response.json()
             persons = data.get("people", [])
-            
+
             linkedin_url_list=[]
             for person in persons:
                 linkedin_url = person.get("linkedin_url")
