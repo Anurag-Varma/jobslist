@@ -293,7 +293,7 @@ def main():
                 <div class=\"org-top-card__primary-content\">
                   <h1 class=\"ember-view org-top-card-summary__title\"> """+company+""" </h1>
                   <div class=\"org-top-card-summary-info-list\">
-                    <div class=\"org-top-card-summary-info-list__info-item\"> Software Development </div>
+                    <div class=\"org-top-card-summary-info-list__info-item\"> Software  </div>
                   </div>
                   </div>
                 </b>
@@ -306,7 +306,7 @@ def main():
             if response.status_code != 200:
                 apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
                 set_key(".env", "APOLLO_COOKIES", apollo_cookies)
-                result["error"].append("Try again")
+                result["error"].append(response.text)
                 return
 
             organization_data=response.json()
@@ -364,8 +364,11 @@ def main():
             response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=payload, headers=headers)
             if response.status_code != 200:
                 result["error"].append(response.text)
+                
 
             data = response.json()
+            
+            
             persons = data.get("people", [])
 
             linkedin_url_list=[]
@@ -406,6 +409,11 @@ def main():
                     try:
                         APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/linkedin_chrome_extension/bulk_prospect_search_page"
                         save_response = requests.post(APOLLO_URL_ADD_TO_LIST, json=info_to_send, headers=save_headers)
+                        if save_response.status_code != 200:
+                            set_key(".env", "APOLLO_COOKIES_SAVE", login_and_get_cookies(apollo_email_save, apollo_password_save))
+                            result["error"].append(save_response.text)
+                            return
+                            
                         saved_contact = save_response.json().get('contacts', {})
                         if len(saved_contact)>0:
                             saved_contact=saved_contact[0]
