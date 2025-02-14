@@ -72,7 +72,7 @@ def scrape_and_post_jobs(role, cookie):
                 continue
 
             # Skip jobs with company name of below list
-            if job["company"] in ["Patterned Learning Career", "HireMeFast LLC", "Phoenix Recruitment", "Jobs via Dice" , "Get It Recruit - Information Technology", "Energy Jobline", "ClickJobs.io", "SynergisticIT", "Get It - Professional Services", "Tata Consultancy Services"]:
+            if job["company"] in ["Patterned Learning Career", "HireMeFast LLC", "Phoenix Recruitment", "Jobs via Dice" , "Get It Recruit - Information Technology", "Energy Jobline", "ClickJobs.io", "SynergisticIT", "Get It - Professional Services", "Tata Consultancy Services", "Lensa", "Jobot", "BeaconFire Inc."]:
                 continue
 
             # Set job location to "United States" if empty
@@ -86,6 +86,9 @@ def scrape_and_post_jobs(role, cookie):
             if job_url_direct == "":
                 job_url_direct = job["job_url"]
                 job_easy_apply = "true"
+
+            if "adzuna.com" in job_url_direct:
+                continue
 
             # Set date posted to today's date if empty
             date_posted = str(job["date_posted"]) if not pd.isna(job["date_posted"]) else ""
