@@ -72,7 +72,10 @@ const getJobs = async (req, res) => {
 
         if (job_easy_apply === "true") filter.job_easy_apply = true;
         if (job_type.length) filter.job_type = { $in: job_type };
-        if (job_experience_level.length) filter.job_experience_level = { $in: job_experience_level };
+        if (job_experience_level.length) {
+            const updatedJobExperienceLevel = [...job_experience_level, "Others"];
+            filter.job_experience_level = { $in: updatedJobExperienceLevel };
+        }
         if (job_location.length) filter.job_location = { $in: job_location };
         if (job_function.length) filter.job_function = { $in: job_function };
         if (job_company_industry.length) filter.job_company_industry = { $in: job_company_industry };
