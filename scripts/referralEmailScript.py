@@ -151,8 +151,8 @@ def main():
         response = requests.post(APOLLO_URL, json=payload, headers=headers)
         if response.status_code != 200:
             apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
-            set_key(".env", "APOLLO_COOKIES", apollo_cookies)
-            result["error"].append("Try again")
+            # set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+            result["error"].append("Cookies error: "+response.text)
             return None
         try:
             return response.json()
@@ -305,8 +305,8 @@ def main():
             response = requests.post(APOLLO_GET_ORGANIZATION_ID, json=payload, headers=headers)
             if response.status_code != 200:
                 apollo_cookies = login_and_get_cookies(apollo_email, apollo_password)
-                set_key(".env", "APOLLO_COOKIES", apollo_cookies)
-                result["error"].append(response.text)
+                # set_key(".env", "APOLLO_COOKIES", apollo_cookies)
+                result["error"].append("Cookies error: "+response.text)
                 return
 
             organization_data=response.json()
@@ -316,60 +316,73 @@ def main():
 
             organization_id=organization_data["organization"]["id"]
             
+            # roles = [
+            #             "senior software engineer", "hiring manager", "software engineering manager", "lead software engineer",
+            #             "lead software developer", "head of engineering", "software engineer", "software developer", 
+            #             "technical recruiter", "senior director", "director of engineering", "director of technology", 
+            #             "talent acquisition manager", "Technical Product Manager", "hiring", "talent acquisition", 
+            #             "talent acquisition specialist", "human resources manager", "People Operations Manager", 
+            #             "Vice President of Technology", "Vice President of Engineering", "Vice President of Product", 
+            #             "Chief Technology Officer", "Chief Information Officer", "Chief Product Officer", 
+            #             "Senior Director of Software Development", "Principal Software Engineer", "Distinguished Engineer", 
+            #             "Lead Software Engineer", "Head of Technology", "Senior Program Manager", 
+            #             "talent acquisition partner", "human resources", "talent acquisition team", 
+            #             "Talent Acquisition Leader", "founder", "managing director", "president", "co-founder"        
+            #         ]
+            
             roles = [
-                        "senior software engineer", "hiring manager", "software engineering manager", "lead software engineer",
-                        "lead software developer", "head of engineering", "software engineer", "software developer", 
-                        "technical recruiter", "senior director", "director of engineering", "director of technology", 
-                        "talent acquisition manager", "Technical Product Manager", "hiring", "talent acquisition", 
-                        "talent acquisition specialist", "human resources manager", "People Operations Manager", 
-                        "Vice President of Technology", "Vice President of Engineering", "Vice President of Product", 
-                        "Chief Technology Officer", "Chief Information Officer", "Chief Product Officer", 
-                        "Senior Director of Software Development", "Principal Software Engineer", "Distinguished Engineer", 
-                        "Lead Software Engineer", "Head of Technology", "Senior Program Manager", 
-                        "talent acquisition partner", "human resources", "talent acquisition team", 
-                        "Talent Acquisition Leader", "founder", "managing director", "president", "co-founder"        
-                    ]
+                        "University Recruiter","Campus Recruiter", "Early Career Recruiter", "New Grad Recruiter", "Graduate Recruiter",
+                        "Technical University Recruiter", "Early Talent Recruiter", "Entry-Level Recruiter", "Talent Acquisition Specialist",
+                        "Talent Acquisition Coordinator", "Talent Acquisition Partner", "University Relations Manager", "Campus Recruiting Manager",
+                        "Early Careers Program Manager", "Emerging Talent Program Manager", "Graduate Programs Manager", "HR Specialist",
+                        "People Operations Manager", "Talent Development Specialist", "Talent Acquisition Consultant", "Recruiting Coordinator",
+                        "Recruitment Manager", "Recruitment Coordinator", "Talent Acquisition Leader", "Talent Manager"
+                        ]
 
-            if roles_flag:
-                payload = {
-                    "page": str(1),
-                    "contact_email_status_v2": ["likely_to_engage", "verified"],
-                    "sort_by_field": "[none]",
-                    "sort_ascending": "False",
-                    "person_locations": ["United States"],
-                    "organization_ids": [organization_id],
-                    "person_titles": roles,
-                    "display_mode": "explorer_mode",
-                    "per_page": 25,
-                    "num_fetch_result": 1,
-                    "context": "people-index-page",
-                    "show_suggestions": "false"
-                }
-            else:
-                payload = {
-                    "page": str(1),
-                    "contact_email_status_v2": ["likely_to_engage", "verified"],
-                    "sort_by_field": "[none]",
-                    "sort_ascending": "False",
-                    "person_locations": ["United States"],
-                    "organization_ids": [organization_id],
-                    "display_mode": "explorer_mode",
-                    "per_page": 25,
-                    "num_fetch_result": 1,
-                    "context": "people-index-page",
-                    "show_suggestions": "false"
-                }
+            def get_profiles(page=1):
+                if roles_flag:
+                    payload = {
+                        "page": str(page),
+                        "contact_email_status_v2": ["likely_to_engage", "verified"],
+                        "sort_by_field": "[none]",
+                        "sort_ascending": "False",
+                        "person_locations": ["United States"],
+                        "organization_ids": [organization_id],
+                        "person_titles": roles,
+                        "display_mode": "explorer_mode",
+                        "per_page": 25,
+                        "num_fetch_result": 1,
+                        "context": "people-index-page",
+                        "show_suggestions": "false"
+                    }
+                else:
+                    payload = {
+                        "page": str(page),
+                        "contact_email_status_v2": ["likely_to_engage", "verified"],
+                        "sort_by_field": "[none]",
+                        "sort_ascending": "False",
+                        "person_locations": ["United States"],
+                        "organization_ids": [organization_id],
+                        "display_mode": "explorer_mode",
+                        "per_page": 25,
+                        "num_fetch_result": 1,
+                        "context": "people-index-page",
+                        "show_suggestions": "false"
+                    }
         
             # Fetch profiles from Apollo API
-            response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=payload, headers=headers)
+            persons = []
+            response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=get_profiles(page=1), headers=headers)
             if response.status_code != 200:
                 result["error"].append(response.text)
-                
-
             data = response.json()
-            
-            
-            persons = data.get("people", [])
+            persons.extend(data.get("people", []))
+
+            response = requests.post(APOLLO_URL_GET_ALL_PROFILES, json=get_profiles(page=2), headers=headers)
+            if response.status_code != 200:
+                result["error"].append(response.text)
+            data = response.json()
+            persons.extend(data.get("people", []))
 
             linkedin_url_list=[]
             for person in persons:
@@ -410,8 +423,8 @@ def main():
                         APOLLO_URL_ADD_TO_LIST = "https://app.apollo.io/api/v1/linkedin_chrome_extension/bulk_prospect_search_page"
                         save_response = requests.post(APOLLO_URL_ADD_TO_LIST, json=info_to_send, headers=save_headers)
                         if save_response.status_code != 200:
-                            set_key(".env", "APOLLO_COOKIES_SAVE", login_and_get_cookies(apollo_email_save, apollo_password_save))
-                            result["error"].append(save_response.text)
+                            # set_key(".env", "APOLLO_COOKIES_SAVE", login_and_get_cookies(apollo_email_save, apollo_password_save))
+                            result["error"].append("Save cookies error: "+save_response.text)
                             return
                             
                         saved_contact = save_response.json().get('contacts', {})
