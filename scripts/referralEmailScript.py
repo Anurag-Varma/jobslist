@@ -369,6 +369,8 @@ def main():
                         "context": "people-index-page",
                         "show_suggestions": "false"
                     }
+
+                return payload
         
             # Fetch profiles from Apollo API
             persons = []
